@@ -11,10 +11,16 @@ export const QuestionListItem: FC<{ id: number }> = (props) => {
   );
 
   return (
-    <TouchableOpacity>
+    <TouchableOpacity style={styles.container}>
       <Card>
         <Text>{question.question}</Text>
       </Card>
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 10,
+  },
+});

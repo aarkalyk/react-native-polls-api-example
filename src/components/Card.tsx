@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ViewProps } from 'react-native';
 
-export const Card: FC<{}> = (props) => {
+export const Card: FC<ViewProps> = (props) => {
   return (
     <View style={[styles.container, styles.shadow]}>{props.children}</View>
   );

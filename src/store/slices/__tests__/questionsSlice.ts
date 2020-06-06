@@ -2,8 +2,8 @@ import {
   questionsReducer,
   QuestionsState,
   questionsActions,
-  mockQuestion,
 } from '../questionsSlice';
+import { mockQuestionObject } from '../../../mocks';
 
 const mockEmptyState: QuestionsState = {
   status: 'idle',
@@ -28,13 +28,15 @@ describe('questionsSlice', () => {
     it('should handle getQuestionsSucceeded action', () => {
       const newState = questionsReducer(
         mockEmptyState,
-        questionsActions.getQuestionsSucceeded({ questions: [mockQuestion] }),
+        questionsActions.getQuestionsSucceeded({
+          questions: [mockQuestionObject],
+        }),
       );
 
       expect(newState).toEqual({
         status: 'success',
-        byId: { [mockQuestion.id]: mockQuestion },
-        ids: [mockQuestion.id],
+        byId: { [mockQuestionObject.id]: mockQuestionObject },
+        ids: [mockQuestionObject.id],
       });
     });
 

@@ -1,17 +1,18 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { RootState } from 'src/store';
+import { RootState } from '../../store';
 import { Screen } from '../../components';
+import { questionsActions } from '../../store/slices/questionsSlice';
 import { QuestionListItem } from './components/QuestionListItem';
 
 export const Questions: FC<{}> = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(questionsActions.getQuestionsRequested({ page: 1 }));
+  }, [dispatch]);
   const ids = useSelector((state: RootState) => state.questions.ids);
-
-  const renderItem = ({ item }: { item: number }) => (
-    <QuestionListItem id={item} />
-  );
 
   return (
     <Screen style={styles.screen}>
@@ -25,6 +26,10 @@ export const Questions: FC<{}> = () => {
     </Screen>
   );
 };
+
+const renderItem = ({ item }: { item: number }) => (
+  <QuestionListItem id={item} />
+);
 
 const keyExtractor = (item: number) => item + '';
 

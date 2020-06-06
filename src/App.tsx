@@ -1,8 +1,11 @@
 import React from 'react';
 
 import { Provider } from 'react-redux';
-import { store } from './store';
 import { Questions } from './screens/questions/Questions';
+import { createStore } from './store';
+import { rootSaga } from './store/sagas';
+
+const store = createStore();
 
 const App = () => {
   return (
