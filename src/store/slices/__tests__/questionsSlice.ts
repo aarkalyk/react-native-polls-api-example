@@ -1,42 +1,14 @@
-import { questionsReducer, QuestionsState, questionsActions } from '../questionsSlice';
-import { QuestionObject } from 'src/types/questions';
+import {
+  questionsReducer,
+  QuestionsState,
+  questionsActions,
+  mockQuestion,
+} from '../questionsSlice';
 
 const mockEmptyState: QuestionsState = {
   status: 'idle',
   ids: [],
   byId: {},
-};
-
-export const mockQuestion: QuestionObject = {
-  question: 'Favorite programming language?',
-  published_at: new Date('2014-11-11T08:40:51.620Z'),
-  id: 1,
-  choices: [
-    {
-      choice: 'Swift',
-      id: 1,
-      votes: 2048,
-      questionId: 1,
-    },
-    {
-      choice: 'Python',
-      id: 2,
-      votes: 1024,
-      questionId: 1,
-    },
-    {
-      choice: 'Objective-C',
-      id: 3,
-      votes: 512,
-      questionId: 1,
-    },
-    {
-      choice: 'Ruby',
-      id: 4,
-      votes: 256,
-      questionId: 1,
-    },
-  ],
 };
 
 describe('questionsSlice', () => {

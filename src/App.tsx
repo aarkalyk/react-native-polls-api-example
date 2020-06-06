@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { Questions } from './screens/Questions';
+import { Questions } from './screens/questions/Questions';
 
 const App = () => {
   return (
