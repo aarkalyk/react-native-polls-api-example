@@ -1,16 +1,19 @@
 import React from 'react';
-
+import 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
-import { Questions } from './screens/questions/Questions';
+import { NavigationContainer } from '@react-navigation/native';
+
 import { createStore } from './store';
-import { rootSaga } from './store/sagas';
+import { MainStackNavigator } from './navigation';
 
 const store = createStore();
 
 const App = () => {
   return (
     <Provider store={store}>
-      <Questions />
+      <NavigationContainer>
+        <MainStackNavigator />
+      </NavigationContainer>
     </Provider>
   );
 };

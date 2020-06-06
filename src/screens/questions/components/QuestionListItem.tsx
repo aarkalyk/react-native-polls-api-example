@@ -1,17 +1,21 @@
 import React, { FC } from 'react';
-import { StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, TouchableOpacity, Text, ViewProps } from 'react-native';
 import { useSelector } from 'react-redux';
 
 import { Card } from '../../../components';
 import { RootState } from '../../../store';
+import { styleValues } from '../../../styles';
 
-export const QuestionListItem: FC<{ id: number }> = (props) => {
-  const question = useSelector(
-    (state: RootState) => state.questions.byId[props.id],
-  );
+interface Props extends ViewProps {
+  id: number;
+  onPress(): void;
+}
+
+export const QuestionListItem: FC<Props> = ({ id, onPress }) => {
+  const question = useSelector((state: RootState) => state.questions.byId[id]);
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <Card>
         <Text>{question.question}</Text>
       </Card>
@@ -21,6 +25,6 @@ export const QuestionListItem: FC<{ id: number }> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10,
+    marginBottom: styleValues.spacings.small,
   },
 });

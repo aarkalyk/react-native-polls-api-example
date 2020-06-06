@@ -1,12 +1,14 @@
 import React, { FC } from 'react';
-import { View, SafeAreaView, ViewProps } from 'react-native';
+import { ViewProps, Animated, StyleProp, ViewStyle } from 'react-native';
 
 interface Props extends ViewProps {
-  unsafe?: boolean;
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 }
 
-export const Screen: FC<Props> = (props) => {
-  const Wrapper = props.unsafe === true ? View : SafeAreaView;
-
-  return <Wrapper>{props.children}</Wrapper>;
+export const Screen: FC<Props> = ({ style, children }) => {
+  return (
+    <Animated.View style={[{ backgroundColor: 'white', flex: 1 }, style]}>
+      {children}
+    </Animated.View>
+  );
 };

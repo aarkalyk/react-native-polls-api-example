@@ -1,26 +1,27 @@
 import React, { FC } from 'react';
 import { View, StyleSheet, ViewProps } from 'react-native';
+import { styleValues, colors } from '../styles';
 
-export const Card: FC<ViewProps> = (props) => {
+export const Card: FC<ViewProps> = ({ children, style }) => {
   return (
-    <View style={[styles.container, styles.shadow]}>{props.children}</View>
+    <View style={[styles.container, styles.shadow, style]}>{children}</View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 6,
+    backgroundColor: colors.white,
+    padding: styleValues.spacings.medium,
+    borderRadius: styleValues.borderRadius,
   },
   shadow: {
-    shadowColor: 'black',
-    shadowOpacity: 0.2,
+    shadowColor: colors.primary,
+    shadowOpacity: 0.3,
     shadowRadius: 3,
     shadowOffset: {
-      width: 1,
+      width: 2,
       height: 2,
     },
-    elevation: 3,
+    elevation: 2,
   },
 });
