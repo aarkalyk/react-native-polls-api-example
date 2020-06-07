@@ -1,14 +1,31 @@
 import React, { FC } from 'react';
-import { ViewProps, Animated, StyleProp, ViewStyle } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { ViewProps, SafeAreaView, View, StyleSheet } from 'react-native';
+import { colors } from '../styles';
 
 interface Props extends ViewProps {
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  unsafe?: boolean;
 }
 
-export const Screen: FC<Props> = ({ style, children }) => {
+export const Screen: FC<Props> = ({ style, unsafe, children }) => {
+  const Wrapper = unsafe === true ? View : SafeAreaView;
   return (
-    <Animated.View style={[{ backgroundColor: 'white', flex: 1 }, style]}>
-      {children}
-    </Animated.View>
+    <LinearGradient
+      colors={[colors.gradient1, colors.gradient1, colors.gradient2]}
+      style={[styles.container, style]}
+    >
+      <Wrapper style={[styles.wrapper, style]}>{children}</Wrapper>
+    </LinearGradient>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  wrapper: {
+    backgroundColor: colors.transparent,
+    flex: 1,
+    overflow: 'visible',
+  },
+});

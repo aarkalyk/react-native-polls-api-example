@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
+import { StatusBar } from 'react-native';
 
 import { RootState } from '../store';
 import { ApiCallStatus } from '../types';
@@ -16,7 +17,12 @@ export const AppNavigator = () => {
   }, [dispatch]);
   const status = useSelector((state: RootState) => state.api.status);
 
-  return <NavigationContainer>{render(status)}</NavigationContainer>;
+  return (
+    <NavigationContainer>
+      <StatusBar barStyle="light-content" />
+      {render(status)}
+    </NavigationContainer>
+  );
 };
 
 const render = (status: ApiCallStatus) => {

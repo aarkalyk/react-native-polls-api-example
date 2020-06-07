@@ -1,24 +1,56 @@
 import React, { FC, useEffect, useRef, useCallback } from 'react';
 import { FlatList, StyleSheet, Animated } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { RootState } from '../../store';
 import { Screen } from '../../components';
+import { NavBar } from '../../navigation';
+import { styleValues, colors } from '../../styles';
 import { questionsActions } from '../../store/slices/questionsSlice';
-import { QuestionListItem } from './components/QuestionListItem';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+
 import { questionDetailsRouteName } from './QuestionDetails';
-import { styleValues } from '../../styles';
+import { QuestionListItem } from './components/QuestionListItem';
 
 export const questionsRouteName = 'Questions';
 
 export const Questions: FC<{}> = () => {
+  const { ids, opacity, onPressQuestion } = useQuestions();
+
+  const renderItem = ({ item }: { item: number }) => (
+    <QuestionListItem id={item} onPress={onPressQuestion(item)} />
+  );
+
+  return (
+    <Screen>
+      <Animated.View
+        style={[
+          styles.animatedContainer,
+          {
+            opacity,
+          },
+        ]}
+      >
+        <NavBar title="Questions" />
+        <FlatList
+          contentContainerStyle={styles.flatListContainer}
+          style={styles.flatList}
+          data={ids}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          showsVerticalScrollIndicator={false}
+        />
+      </Animated.View>
+    </Screen>
+  );
+};
+
+const useQuestions = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(questionsActions.getQuestionsRequested({ page: 1 }));
   }, [dispatch]);
 
-  const navigation = useNavigation();
   const ids = useSelector((state: RootState) => state.questions.ids);
 
   const opacity = useRef(new Animated.Value(1)).current;
@@ -29,7 +61,7 @@ export const Questions: FC<{}> = () => {
     };
 
     Animated.timing(opacity, {
-      duration: 300,
+      duration: 500,
       toValue: value[option],
       useNativeDriver: true,
     }).start();
@@ -41,48 +73,32 @@ export const Questions: FC<{}> = () => {
     }, [changeOpacity]),
   );
 
-  const renderItem = ({ item }: { item: number }) => (
-    <QuestionListItem
-      id={item}
-      onPress={() => {
-        changeOpacity('hide');
-        navigation.navigate(questionDetailsRouteName, { id: item });
-      }}
-    />
-  );
+  const navigation = useNavigation();
+  const onPressQuestion = (id: number) => () => {
+    changeOpacity('hide');
+    navigation.navigate(questionDetailsRouteName, { id });
+  };
 
-  return (
-    <Screen
-      style={[
-        styles.screen,
-        {
-          opacity,
-        },
-      ]}
-    >
-      <FlatList
-        contentContainerStyle={styles.flatListContainer}
-        style={styles.flatList}
-        data={ids}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-      />
-    </Screen>
-  );
+  return {
+    ids,
+    opacity,
+    onPressQuestion,
+  };
 };
 
-const keyExtractor = (item: number) => item + '';
+const keyExtractor = (id: number) => String(id);
 
 const styles = StyleSheet.create({
-  screen: {
+  animatedContainer: {
     flex: 1,
+    overflow: 'hidden',
+    backgroundColor: colors.transparent,
   },
   flatList: {
-    overflow: 'visible',
+    overflow: 'scroll',
   },
   flatListContainer: {
     flexGrow: 1,
     paddingHorizontal: styleValues.spacings.medium,
-    paddingTop: styleValues.spacings.extraLarge,
   },
 });
