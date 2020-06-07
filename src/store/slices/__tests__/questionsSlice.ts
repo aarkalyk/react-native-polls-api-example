@@ -3,7 +3,10 @@ import {
   QuestionsState,
   questionsActions,
 } from '../questionsSlice';
-import { mockQuestionObject } from '../../../mocks';
+import {
+  mockQuestionObject,
+  mockQuestionAndChoiceObjects,
+} from '../../../mocks';
 
 const mockEmptyState: QuestionsState = {
   status: 'idle',
@@ -28,8 +31,9 @@ describe('questionsSlice', () => {
     it('should handle getQuestionsSucceeded action', () => {
       const newState = questionsReducer(
         mockEmptyState,
-        questionsActions.getQuestionsSucceeded({
-          questions: [mockQuestionObject],
+        questionsActions.getQuestionsAndChoicesSucceeded({
+          questions: mockQuestionAndChoiceObjects.questionObjects,
+          choices: mockQuestionAndChoiceObjects.choiceObjects,
         }),
       );
 

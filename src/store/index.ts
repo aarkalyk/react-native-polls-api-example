@@ -1,12 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { questionsReducer, QuestionsState } from './slices/questionsSlice';
 import createSagaMiddleware from 'redux-saga';
+
 import { rootSaga } from './sagas';
 import { ApiState, apiReducer } from './slices/apiSlice';
+import { ChoicesState, choicesReducer } from './slices/choicesSlice';
+import { questionsReducer, QuestionsState } from './slices/questionsSlice';
 
 export type RootState = {
-  questions: QuestionsState;
   api: ApiState;
+  choices: ChoicesState;
+  questions: QuestionsState;
 };
 
 export const createStore = () => {
@@ -14,8 +17,9 @@ export const createStore = () => {
 
   const store = configureStore<RootState>({
     reducer: {
-      questions: questionsReducer,
       api: apiReducer,
+      choices: choicesReducer,
+      questions: questionsReducer,
     },
     middleware: [sagaMiddleware],
   });

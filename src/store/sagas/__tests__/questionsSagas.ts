@@ -2,9 +2,9 @@ import { runSaga, Saga } from 'redux-saga';
 
 import { APIClient, APIHelpers } from '../../../services';
 import {
-  mockQuestionObjectResponse,
-  mockQuestionObject,
   mockUrl,
+  mockQuestionObjectResponse,
+  mockQuestionAndChoiceObjects,
 } from '../../../mocks';
 import { fetchQuestions } from '../questionsSagas';
 import { questionsActions } from '../../../store/slices/questionsSlice';
@@ -23,13 +23,15 @@ describe('questionsSaga', () => {
         );
 
       const dispatched: ReturnType<
-        typeof questionsActions.getQuestionsSucceeded
+        typeof questionsActions.getQuestionsAndChoicesSucceeded
       >[] = [];
 
       await runSaga(
         {
           dispatch: (
-            action: ReturnType<typeof questionsActions.getQuestionsSucceeded>,
+            action: ReturnType<
+              typeof questionsActions.getQuestionsAndChoicesSucceeded
+            >,
           ) => dispatched.push(action),
           getState: () => ({ api: { url: mockUrl } }),
         },
@@ -38,12 +40,13 @@ describe('questionsSaga', () => {
       );
 
       expect(APIClient.getQuestions).toBeCalledWith({
-        path: mockUrl,
+        url: mockUrl,
         page: 1,
       });
       expect(dispatched).toEqual([
-        questionsActions.getQuestionsSucceeded({
-          questions: [mockQuestionObject],
+        questionsActions.getQuestionsAndChoicesSucceeded({
+          questions: mockQuestionAndChoiceObjects.questionObjects,
+          choices: mockQuestionAndChoiceObjects.choiceObjects,
         }),
       ]);
     });
@@ -69,7 +72,7 @@ describe('questionsSaga', () => {
       );
 
       expect(APIClient.getQuestions).toBeCalledWith({
-        path: mockUrl,
+        url: mockUrl,
         page: 1,
       });
       expect(dispatched).toEqual([

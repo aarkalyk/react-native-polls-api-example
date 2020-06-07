@@ -1,21 +1,42 @@
+import {
+  QuestionObjectResponse,
+  QuestionsUrlResponse,
+  ChoiceObjectResponse,
+} from '../types/questions';
+
 export const API_BASE_URL = 'https://polls.apiblueprint.org';
 
-const getQuestions = ({ path, page }: { path: string; page?: number }) => {
-  const url = API_BASE_URL + path + (page !== undefined ? '?' + page : '');
-  return client(url);
+type GetQuestionsProps = { url: string; page?: number };
+const getQuestions = ({ url, page }: GetQuestionsProps) => {
+  const endpoint = API_BASE_URL + url + (page !== undefined ? '?' + page : '');
+  return client<QuestionObjectResponse[]>(endpoint, 'GET');
 };
 
-const client = (endpoint: string, body?: any) => {
+type PostVoteProps = {
+  url: string;
+  question_id: number;
+  choice_id: number;
+};
+const postVote = ({ url, question_id, choice_id }: PostVoteProps) => {
+  const endpoint =
+    API_BASE_URL + url + '/' + question_id + '/choices/' + choice_id;
+
+  return client<ChoiceObjectResponse>(endpoint, 'POST');
+};
+
+const getUrl = () => {
+  const endpoint = API_BASE_URL;
+  return client<QuestionsUrlResponse>(endpoint, 'GET');
+};
+
+const client = <T>(endpoint: string, method: 'POST' | 'GET'): Promise<T> => {
   const config = {
-    method: body ? 'POST' : 'GET',
+    method,
     headers: {
       'Content-Type': 'application/json',
     },
-    body,
   };
-  if (body) {
-    config.body = JSON.stringify(body);
-  }
+
   return fetch(endpoint, config).then(async (response) => {
     const data = await response.json();
     if (response.ok) {
@@ -28,4 +49,6 @@ const client = (endpoint: string, body?: any) => {
 
 export const APIClient = {
   getQuestions,
+  getUrl,
+  postVote,
 };

@@ -13,15 +13,20 @@ export function* fetchQuestions(
     const questionsResponse: QuestionObjectResponse[] = yield call(
       APIClient.getQuestions,
       {
-        path: url,
+        url,
         page: action.payload.page,
       },
     );
 
-    const questions = APIHelpers.convertQuestionsResponseToQuestionObjects(
+    const questionAndChoiceObjects = APIHelpers.convertQuestionsResponseToQuestionAndChoiceObjects(
       questionsResponse,
     );
-    yield put(questionsActions.getQuestionsSucceeded({ questions }));
+    yield put(
+      questionsActions.getQuestionsAndChoicesSucceeded({
+        questions: questionAndChoiceObjects.questionObjects,
+        choices: questionAndChoiceObjects.choiceObjects,
+      }),
+    );
   } catch (e) {
     console.error('Error in fetchQuestions saga: ', e);
     yield put(

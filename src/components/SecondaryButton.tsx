@@ -1,10 +1,19 @@
 import React, { FC } from 'react';
-import { TouchableOpacity, View, Text } from 'react-native';
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  TouchableOpacityProps,
+} from 'react-native';
 import { styleValues, colors } from '../styles';
 
-export const SecondaryButton: FC<{ title: string }> = (props) => {
+interface Props extends TouchableOpacityProps {
+  title: string;
+}
+
+export const SecondaryButton: FC<Props> = (props) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={props.onPress}>
       <View
         style={{
           padding: styleValues.spacings.medium,

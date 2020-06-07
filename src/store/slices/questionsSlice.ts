@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { QuestionObject } from 'src/types/questions';
+
+import { ApiCallStatus, QuestionObject, ChoiceObject } from '../../types';
 
 export type QuestionsState = {
-  status: 'idle' | 'loading' | 'success' | 'error';
+  status: ApiCallStatus;
   byId: { [id: number]: QuestionObject };
   ids: number[];
   errorMessage?: string;
@@ -21,9 +22,12 @@ const questionsSlice = createSlice({
     getQuestionsRequested(state, _: PayloadAction<{ page: number }>) {
       state.status = 'loading';
     },
-    getQuestionsSucceeded(
+    getQuestionsAndChoicesSucceeded(
       state,
-      action: PayloadAction<{ questions: QuestionObject[] }>,
+      action: PayloadAction<{
+        questions: QuestionObject[];
+        choices: ChoiceObject[];
+      }>,
     ) {
       const { questions } = action.payload;
 

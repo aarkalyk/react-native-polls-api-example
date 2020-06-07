@@ -2,7 +2,7 @@
 export type QuestionObject = {
   id: number;
   published_at: Date;
-  choices: ChoiceObject[];
+  choice_ids: number[];
 } & Question;
 
 export type QuestionObjectResponse = {
@@ -28,4 +28,9 @@ export type ChoiceObjectResponse = {
 type Choice = {
   choice: string;
   votes: number;
+};
+
+// Questions url
+export type QuestionsUrlResponse = {
+  questions_url: string;
 };

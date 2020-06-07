@@ -1,14 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { ApiCallStatus } from '../../types';
+
 export type ApiState = {
-  status: 'idle' | 'loading' | 'success' | 'error';
+  status: ApiCallStatus;
   url: string;
   errorMessage?: string;
 };
 
 const initialState: ApiState = {
   status: 'idle',
-  url: '/questions',
+  url: '',
 };
 
 const apiSlice = createSlice({
