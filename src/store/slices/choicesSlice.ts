@@ -44,6 +44,13 @@ const choicesSlice = createSlice({
         });
       },
     );
+    builder.addCase(questionsActions.postQuestionSucceeded, (state, action) => {
+      const { choices } = action.payload;
+
+      choices.forEach((choice) => {
+        state.byId[choice.id] = choice;
+      });
+    });
   },
 });
 

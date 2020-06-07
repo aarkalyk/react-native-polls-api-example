@@ -5,8 +5,9 @@ import {
   mockUrl,
   mockQuestionObjectResponse,
   mockQuestionAndChoiceObjects,
+  mockQuestionBody,
 } from '../../../mocks';
-import { fetchQuestions } from '../questionsSagas';
+import { fetchQuestions, postQuestion } from '../questionsSagas';
 import { questionsActions } from '../../../store/slices/questionsSlice';
 
 describe('questionsSaga', () => {
@@ -77,6 +78,81 @@ describe('questionsSaga', () => {
       });
       expect(dispatched).toEqual([
         questionsActions.getQuestionsFailed({
+          errorMessage: APIHelpers.getGenericErrorMessage(),
+        }),
+      ]);
+    });
+  });
+
+  describe('postQuestion', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('dispatches postQuestionSucceeded action if api call succeeds', async () => {
+      jest
+        .spyOn(APIClient, 'postQuestion')
+        .mockImplementationOnce(() =>
+          Promise.resolve(mockQuestionObjectResponse),
+        );
+
+      const dispatched: ReturnType<
+        typeof questionsActions.postQuestionSucceeded
+      >[] = [];
+
+      await runSaga(
+        {
+          dispatch: (
+            action: ReturnType<typeof questionsActions.postQuestionSucceeded>,
+          ) => dispatched.push(action),
+          getState: () => ({ api: { url: mockUrl } }),
+        },
+        postQuestion as Saga<any[]>,
+        questionsActions.postQuestionRequested({
+          questionBody: mockQuestionBody,
+        }),
+      );
+
+      expect(APIClient.postQuestion).toBeCalledWith({
+        url: mockUrl,
+        questionBody: mockQuestionBody,
+      });
+      expect(dispatched).toEqual([
+        questionsActions.postQuestionSucceeded({
+          questions: mockQuestionAndChoiceObjects.questionObjects,
+          choices: mockQuestionAndChoiceObjects.choiceObjects,
+        }),
+      ]);
+    });
+
+    it('dispatches postQuestionFailed action if api call fails', async () => {
+      jest
+        .spyOn(APIClient, 'postQuestion')
+        .mockImplementationOnce(() => Promise.reject('Error'));
+
+      const dispatched: ReturnType<
+        typeof questionsActions.postQuestionFailed
+      >[] = [];
+
+      await runSaga(
+        {
+          dispatch: (
+            action: ReturnType<typeof questionsActions.postQuestionFailed>,
+          ) => dispatched.push(action),
+          getState: () => ({ api: { url: mockUrl } }),
+        },
+        postQuestion as Saga<any[]>,
+        questionsActions.postQuestionRequested({
+          questionBody: mockQuestionBody,
+        }),
+      );
+
+      expect(APIClient.postQuestion).toBeCalledWith({
+        url: mockUrl,
+        questionBody: mockQuestionBody,
+      });
+      expect(dispatched).toEqual([
+        questionsActions.postQuestionFailed({
           errorMessage: APIHelpers.getGenericErrorMessage(),
         }),
       ]);

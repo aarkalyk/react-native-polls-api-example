@@ -4,6 +4,7 @@ import {
   QuestionsUrlResponse,
   ChoiceObject,
   ChoiceObjectResponse,
+  QuestionBody,
 } from '../types/questions';
 import { APIHelpers } from '../services';
 
@@ -40,6 +41,11 @@ export const mockQuestionObjectResponse: QuestionObjectResponse = {
 export const mockQuestionAndChoiceObjects: ReturnType<typeof APIHelpers.convertQuestionsResponseToQuestionAndChoiceObjects> = {
   questionObjects: [mockQuestionObject],
   choiceObjects: [mockChoiceObject],
+};
+
+export const mockQuestionBody: QuestionBody = {
+  question: mockQuestionObject.question,
+  choices: [mockChoiceObject.choice],
 };
 
 export const mockUrl = '/questions';

@@ -11,16 +11,36 @@ import { ColorName, colors } from '../styles';
 interface Props extends TouchableOpacityProps {
   iconName: ImageName;
   iconColor?: ColorName;
+  iconSize?: {
+    width: number;
+    height: number;
+  };
 }
 
-export const TouchableIcon: FC<Props> = ({ iconColor, iconName, onPress }) => {
+export const TouchableIcon: FC<Props> = ({
+  iconColor,
+  iconName,
+  onPress,
+  iconSize,
+  style,
+  testID,
+}) => {
   const tintColor = iconColor ? colors[iconColor] : undefined;
 
   return (
-    <TouchableOpacity onPress={onPress} hitSlop={touchableHitSlop}>
+    <TouchableOpacity
+      onPress={onPress}
+      hitSlop={touchableHitSlop}
+      style={style}
+      testID={testID}
+    >
       <Image
         source={images[iconName]()}
-        style={[styles.image, { tintColor }]}
+        style={[
+          styles.image,
+          { tintColor },
+          iconSize ? { ...iconSize } : undefined,
+        ]}
         resizeMode="contain"
       />
     </TouchableOpacity>

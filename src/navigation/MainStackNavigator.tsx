@@ -9,6 +9,10 @@ import {
   questionDetailsRouteName,
 } from '../screens/questions/QuestionDetails';
 import { Questions, questionsRouteName } from '../screens/questions/Questions';
+import {
+  QuestionCreation,
+  questionCreationRouteName,
+} from '../screens/questions/QuestionCreation';
 
 export type RootStackParamList = {
   [questionsRouteName]: undefined;
@@ -28,6 +32,10 @@ export const MainStackNavigator = () => {
       <Stack.Screen
         name={questionDetailsRouteName}
         component={QuestionDetails}
+      />
+      <Stack.Screen
+        name={questionCreationRouteName}
+        component={QuestionCreation}
       />
     </Stack.Navigator>
   );

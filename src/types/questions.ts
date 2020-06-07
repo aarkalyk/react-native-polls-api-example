@@ -15,6 +15,11 @@ type Question = {
   question: string;
 };
 
+export type QuestionBody = {
+  question: string;
+  choices: string[];
+};
+
 // Choice types
 export type ChoiceObject = {
   id: number;

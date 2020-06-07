@@ -1,16 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ApiCallStatus, QuestionObject, ChoiceObject } from '../../types';
+import {
+  ApiCallStatus,
+  QuestionObject,
+  ChoiceObject,
+  QuestionBody,
+} from '../../types';
 
 export type QuestionsState = {
   status: ApiCallStatus;
   byId: { [id: number]: QuestionObject };
   ids: number[];
   errorMessage?: string;
+  creationStatus: ApiCallStatus;
+  creationError?: string;
 };
 
 const initialState: QuestionsState = {
   status: 'idle',
+  creationStatus: 'idle',
   byId: {},
   ids: [],
 };
@@ -33,8 +41,10 @@ const questionsSlice = createSlice({
 
       state.status = 'success';
       questions.forEach((question) => {
+        if (!(question.id in state.byId)) {
+          state.ids.push(question.id);
+        }
         state.byId[question.id] = question;
-        state.ids.push(question.id);
       });
     },
     getQuestionsFailed(state, action: PayloadAction<{ errorMessage: string }>) {
@@ -42,6 +52,39 @@ const questionsSlice = createSlice({
 
       state.status = 'error';
       state.errorMessage = errorMessage;
+    },
+    postQuestionRequested(
+      state,
+      _: PayloadAction<{ questionBody: QuestionBody }>,
+    ) {
+      state.creationStatus = 'loading';
+    },
+    postQuestionSucceeded(
+      state,
+      action: PayloadAction<{
+        questions: QuestionObject[];
+        choices: ChoiceObject[];
+      }>,
+    ) {
+      const { questions } = action.payload;
+      state.creationStatus = 'success';
+
+      questions.forEach((question) => {
+        if (!(question.id in state.byId)) {
+          state.ids.push(question.id);
+        }
+        state.byId[question.id] = question;
+      });
+    },
+    postQuestionFailed(
+      state,
+      action: PayloadAction<{
+        errorMessage: string;
+      }>,
+    ) {
+      const { errorMessage } = action.payload;
+      state.creationStatus = 'error';
+      state.creationError = errorMessage;
     },
   },
 });
