@@ -12,7 +12,7 @@ export type RootState = {
   questions: QuestionsState;
 };
 
-export const createStore = () => {
+export const createStore = (preloadedState?: Partial<RootState>) => {
   const sagaMiddleware = createSagaMiddleware();
 
   const store = configureStore<RootState>({
@@ -22,6 +22,7 @@ export const createStore = () => {
       questions: questionsReducer,
     },
     middleware: [sagaMiddleware],
+    preloadedState,
   });
 
   sagaMiddleware.run(rootSaga);

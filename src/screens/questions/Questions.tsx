@@ -4,7 +4,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { RootState } from '../../store';
-import { Screen } from '../../components';
+import { Screen, LoadingScreen } from '../../components';
 import { NavBar } from '../../navigation';
 import { styleValues, colors } from '../../styles';
 import { questionsActions } from '../../store/slices/questionsSlice';
@@ -15,11 +15,15 @@ import { QuestionListItem } from './components/QuestionListItem';
 export const questionsRouteName = 'Questions';
 
 export const Questions: FC<{}> = () => {
-  const { ids, opacity, onPressQuestion } = useQuestions();
+  const { ids, status, opacity, onPressQuestion } = useQuestions();
 
   const renderItem = ({ item }: { item: number }) => (
     <QuestionListItem id={item} onPress={onPressQuestion(item)} />
   );
+
+  if (status === 'idle' || status === 'loading') {
+    return <LoadingScreen />;
+  }
 
   return (
     <Screen>
@@ -52,6 +56,7 @@ const useQuestions = () => {
   }, [dispatch]);
 
   const ids = useSelector((state: RootState) => state.questions.ids);
+  const status = useSelector((state: RootState) => state.questions.status);
 
   const opacity = useRef(new Animated.Value(1)).current;
   const changeOpacity = useCallback((option: 'hide' | 'show') => {
@@ -81,6 +86,7 @@ const useQuestions = () => {
 
   return {
     ids,
+    status,
     opacity,
     onPressQuestion,
   };
