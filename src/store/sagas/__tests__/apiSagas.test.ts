@@ -1,7 +1,7 @@
 import { runSaga, Saga } from 'redux-saga';
 
 import { APIClient, APIHelpers } from '../../../services';
-import { mockUrl, mockUrlResponse } from '../../../mocks';
+import { mockUrl, mockUrlResponse } from '../../../test/mocks';
 import { fetchUrl } from '../apiSagas';
 import { apiActions } from '../../../store/slices/apiSlice';
 

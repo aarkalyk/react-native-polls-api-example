@@ -11,26 +11,8 @@ import {
   mockQuestionObject,
   mockChoiceObject,
   mockChoiceId,
-  mockQuestionBody,
-} from '../../mocks';
-import { questionsActions } from '../../store/slices/questionsSlice';
-import { choicesActions } from '../../store/slices/choicesSlice';
-import {
-  CREATE_NEW_BUTTON_TEST_ID,
-  ACTIVITY_INDICATOR_TEST_ID,
-} from '../../screens/questions/Questions';
-import {
-  QUESTION_TITLE_TEXT_INPUT_TEST_ID,
-  CHOICE_TEXT_INPUT_TEST_ID,
-  QUESTION_SUBMIT_BUTTON,
-} from '../../screens/questions/QuestionCreation';
-
-jest.mock('react-native/Libraries/LayoutAnimation/LayoutAnimation', () => ({
-  ...require.requireActual(
-    'react-native/Libraries/LayoutAnimation/LayoutAnimation',
-  ),
-  configureNext: jest.fn(),
-}));
+} from '../../test/mocks';
+import { CREATE_NEW_BUTTON_TEST_ID } from '../../screens/questions/Questions';
 
 const mockState: Partial<RootState> = {
   questions: {
@@ -67,186 +49,56 @@ const setup = (state?: Partial<RootState>) => {
 };
 
 describe('AppNavigator', () => {
-  describe('LoadingScreen', () => {
-    it('should render if api url is loading', async () => {
-      const { wrapper } = setup({
-        api: {
-          status: 'loading',
-          url: '',
-        },
-      });
-
-      // check if loading screen is displayed
-      const loadingScreen = await wrapper.queryByTestId(LOADING_SCREEN_TEST_ID);
-      await waitFor(() => loadingScreen);
-
-      expect(loadingScreen).not.toBeNull();
+  it('should render LoadingScreen if api url is loading', async () => {
+    const { wrapper } = setup({
+      api: {
+        status: 'loading',
+        url: '',
+      },
     });
+
+    const loadingScreen = await wrapper.queryByTestId(LOADING_SCREEN_TEST_ID);
+    await waitFor(() => loadingScreen);
+
+    expect(loadingScreen).not.toBeNull();
   });
 
-  describe('Questions', () => {
-    describe('empty state', () => {
-      it('should dispatch questionsActions.getQuestionsRequested action and display activity indicator', async () => {
-        const { wrapper, dispatch } = setup({
-          questions: {
-            status: 'loading',
-            byId: {},
-            ids: [],
-            creationStatus: 'idle',
-          },
-        });
+  it('should render Questions screen when api url is present in the store', async () => {
+    const { wrapper } = setup();
 
-        // check if activity indicator is displayed
-        const activityIndicator = await wrapper.queryByTestId(
-          ACTIVITY_INDICATOR_TEST_ID,
-        );
-        await waitFor(() => activityIndicator);
+    const questionsNavTitle = await wrapper.queryByText('Questions');
+    await waitFor(() => questionsNavTitle);
 
-        expect(dispatch).toHaveBeenCalledWith(
-          questionsActions.getQuestionsRequested(),
-        );
-        expect(activityIndicator).not.toBeNull();
-      });
-    });
+    expect(questionsNavTitle).not.toBeNull();
+  });
 
-    describe('non empty state', () => {
-      it('should render questions from the store', async () => {
-        const { wrapper } = setup();
+  it('should navigate to QuestionDetails screen when tapping on QuestionListItem', async () => {
+    const { wrapper } = setup();
 
-        // check if question title from the store is displayed
-        const questionTitle = await wrapper.queryByText(
-          mockQuestionObject.question,
-        );
-        await waitFor(() => questionTitle);
+    // navigate to QuestionDetails
+    const questionItem = await wrapper.getByText(mockQuestionObject.question);
+    act(() => fireEvent(questionItem, 'press'));
 
-        expect(questionTitle).not.toBeNull();
-      });
+    // check if question choice is displayed (choice can ONLY be displayed in QuestionDetails)
+    const choiceElement = await wrapper.queryByText(mockChoiceObject.choice);
+    await waitFor(() => choiceElement);
 
-      it('should navigate to QuestionDetails screen when tapping on QuestionListItem', async () => {
-        const { wrapper } = setup();
+    expect(choiceElement).not.toBeNull();
+  });
 
-        // navigate to QuestionDetails
-        const questionItem = await wrapper.getByText(
-          mockQuestionObject.question,
-        );
-        act(() => fireEvent(questionItem, 'press'));
+  it('should navigate to QuestionCreation screen when tapping on create new button', async () => {
+    const { wrapper } = setup();
 
-        // check if question choice is displayed (choice can ONLY be displayed in QuestionDetails)
-        const choiceElement = await wrapper.queryByText(
-          mockChoiceObject.choice,
-        );
-        await waitFor(() => choiceElement);
+    // navigate to QuestionCreation
+    const createNewButton = await wrapper.getByTestId(
+      CREATE_NEW_BUTTON_TEST_ID,
+    );
+    act(() => fireEvent(createNewButton, 'press'));
 
-        expect(choiceElement).not.toBeNull();
-      });
+    // Check if QuestionCreation navigation title is displayed
+    const navBarTitle = await wrapper.queryByText('New question');
+    await waitFor(() => navBarTitle);
 
-      describe('QuestionDetails', () => {
-        it('should dispatch choicesActions.postVoteRequested when tapping on ChoiceListItem', async () => {
-          const { wrapper, dispatch } = setup();
-
-          // navigate to QuestionDetails
-          const questionItem = await wrapper.getByText(
-            mockQuestionObject.question,
-          );
-          act(() => fireEvent(questionItem, 'press'));
-
-          // tap on a choice
-          const choiceElement = await wrapper.getByText(
-            mockChoiceObject.choice,
-          );
-          await waitFor(() => choiceElement);
-          act(() => fireEvent(choiceElement, 'press'));
-
-          expect(dispatch).toHaveBeenCalledWith(
-            choicesActions.postVoteRequested({
-              question_id: mockQuestionId,
-              choice_id: mockChoiceId,
-            }),
-          );
-        });
-      });
-
-      it('should navigate to QuestionCreation screen when tapping on create new button', async () => {
-        const { wrapper } = setup();
-
-        // navigate to QuestionCreation
-        const createNewButton = await wrapper.getByTestId(
-          CREATE_NEW_BUTTON_TEST_ID,
-        );
-        act(() => fireEvent(createNewButton, 'press'));
-
-        // Check if QuestionCreation navigation title is displayed
-        const navBarTitle = await wrapper.queryByText('New question');
-        await waitFor(() => navBarTitle);
-
-        expect(navBarTitle).not.toBeNull();
-      });
-
-      describe('QuestionCreation', () => {
-        beforeAll(() => {
-          jest.clearAllMocks();
-        });
-
-        it('should take inputs from TextInputs and submit as QuestionBody', async () => {
-          const { wrapper, dispatch } = setup();
-
-          // navigate to QuestionCreation
-          const createNewButton = await wrapper.getByTestId(
-            CREATE_NEW_BUTTON_TEST_ID,
-          );
-          act(() => fireEvent(createNewButton, 'press'));
-
-          // Enter question title
-          const questionTitleTextInput = await wrapper.getByTestId(
-            QUESTION_TITLE_TEXT_INPUT_TEST_ID,
-          );
-          await waitFor(() => questionTitleTextInput);
-          act(() =>
-            fireEvent.changeText(
-              questionTitleTextInput,
-              mockQuestionObject.question,
-            ),
-          );
-
-          // Enter choice 1
-          const choiceTextInput1 = await wrapper.getByTestId(
-            CHOICE_TEXT_INPUT_TEST_ID + '_1',
-          );
-          act(() =>
-            fireEvent.changeText(choiceTextInput1, mockChoiceObject.choice),
-          );
-          await waitFor(() => choiceTextInput1);
-
-          // Enter choice 2
-          const choiceTextInput2 = await wrapper.getByTestId(
-            CHOICE_TEXT_INPUT_TEST_ID + '_2',
-          );
-          act(() =>
-            fireEvent.changeText(choiceTextInput2, mockChoiceObject.choice),
-          );
-          await waitFor(() => choiceTextInput2);
-
-          // Submit
-          const submitButton = await wrapper.getByTestId(
-            QUESTION_SUBMIT_BUTTON,
-          );
-          act(() => fireEvent(submitButton, 'press'));
-          await waitFor(() => submitButton);
-
-          expect(dispatch).toHaveBeenCalledWith(
-            questionsActions.postQuestionRequested({
-              questionBody: {
-                ...mockQuestionBody,
-                // duplicating choices since we entered the same choice twice above
-                choices: [
-                  ...mockQuestionBody.choices,
-                  mockQuestionBody.choices[0],
-                ],
-              },
-            }),
-          );
-        });
-      });
-    });
+    expect(navBarTitle).not.toBeNull();
   });
 });

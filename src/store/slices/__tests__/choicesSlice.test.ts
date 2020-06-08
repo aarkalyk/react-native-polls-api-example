@@ -4,7 +4,7 @@ import {
   mockQuestionAndChoiceObjects,
   mockChoiceId,
   mockQuestionId,
-} from '../../../mocks';
+} from '../../../test/mocks';
 import { questionsActions } from '../questionsSlice';
 
 const mockEmptyState: ChoicesState = {

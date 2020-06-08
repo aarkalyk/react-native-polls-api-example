@@ -7,7 +7,7 @@ import {
   mockQuestionObject,
   mockQuestionAndChoiceObjects,
   mockQuestionBody,
-} from '../../../mocks';
+} from '../../../test/mocks';
 
 const mockEmptyState: QuestionsState = {
   status: 'idle',

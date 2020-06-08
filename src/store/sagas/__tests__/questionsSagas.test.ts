@@ -7,7 +7,7 @@ import {
   mockQuestionAndChoiceObjects,
   mockQuestionBody,
   mockNextUrl,
-} from '../../../mocks';
+} from '../../../test/mocks';
 import { fetchQuestions, postQuestion } from '../questionsSagas';
 import { questionsActions } from '../../../store/slices/questionsSlice';
 

@@ -2,7 +2,7 @@ import { APIHelpers } from '../APIHelpers';
 import {
   mockQuestionObjectResponse,
   mockQuestionAndChoiceObjects,
-} from '../../mocks';
+} from '../../test/mocks';
 
 describe('APIHelpers', () => {
   describe('convertQuestionsResponseToQuestionAndChoiceObjects', () => {

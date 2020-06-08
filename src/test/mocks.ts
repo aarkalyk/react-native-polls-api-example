@@ -7,6 +7,7 @@ import {
   QuestionBody,
 } from '../types/questions';
 import { APIHelpers } from '../services';
+import { RootState } from '../store';
 
 export const mockChoiceId = 2;
 export const mockQuestionId = 1;
@@ -53,4 +54,21 @@ export const mockNextUrl = '/questions?2';
 
 export const mockUrlResponse: QuestionsUrlResponse = {
   questions_url: mockUrl,
+};
+
+export const mockReduxStoreState: Partial<RootState> = {
+  questions: {
+    status: 'success',
+    byId: { [mockQuestionId]: mockQuestionObject },
+    ids: [mockQuestionId],
+    creationStatus: 'idle',
+  },
+  api: {
+    status: 'success',
+    url: '/questions',
+  },
+  choices: {
+    byId: { [mockChoiceId]: mockChoiceObject },
+    votedChoiceByQuestionId: {},
+  },
 };

@@ -6,7 +6,7 @@ import {
   mockChoiceObject,
   mockQuestionId,
   mockChoiceId,
-} from '../../../mocks';
+} from '../../../test/mocks';
 import { postVote } from '../choicesSagas';
 import { APIClient } from '../../../services';
 import { choicesActions } from '../../../store/slices/choicesSlice';
