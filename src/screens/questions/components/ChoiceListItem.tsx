@@ -1,7 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   LayoutAnimation,
@@ -10,6 +9,7 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { images } from '../../../assets';
+import { BodySmall } from '../../../components';
 import { colors, styleValues } from '../../../styles';
 
 interface Props extends TouchableOpacityProps {
@@ -39,9 +39,11 @@ export const ChoiceListItem: FC<Props> = ({
       <View style={[styles.container, { borderWidth }]}>
         <View style={[styles.percentageBar, { width }]} />
         {!hasBeenVoted && (
-          <Text style={[styles.title, { textAlign: 'center' }]}>{title}</Text>
+          <BodySmall style={[styles.title, { textAlign: 'center' }]}>
+            {title}
+          </BodySmall>
         )}
-        {hasBeenVoted && <Text style={styles.title}>{title}</Text>}
+        {hasBeenVoted && <BodySmall style={styles.title}>{title}</BodySmall>}
         {isChosen && <Image source={images.checkMark()} style={styles.icon} />}
       </View>
     </TouchableOpacity>
@@ -86,7 +88,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 18,
     height: 18,
-    tintColor: 'black',
+    tintColor: colors.black,
     position: 'absolute',
     right: styleValues.spacings.medium,
   },

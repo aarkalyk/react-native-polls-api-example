@@ -2,9 +2,14 @@ import React from 'react';
 import { StyleSheet, ActivityIndicator } from 'react-native';
 import { TextInput, ScrollView } from 'react-native-gesture-handler';
 
+import {
+  Card,
+  bodyStyles,
+  PrimaryButton,
+  TouchableIcon,
+} from '../../components';
 import { NavBar } from '../../navigation';
 import { styleValues, colors } from '../../styles';
-import { Card, TouchableIcon, PrimaryButton } from '../../components';
 
 import {
   useQuestionCreation,
@@ -104,20 +109,21 @@ const styles = StyleSheet.create({
     marginBottom: styleValues.spacings.medium,
   },
   navbarTitle: {
-    color: 'black',
+    color: colors.black,
   },
   scrollView: {
     flexGrow: 1,
   },
   textInput: {
     flexWrap: 'wrap',
-    fontSize: 18,
+    fontSize: bodyStyles.regular.fontSize,
     borderBottomColor: colors.secondary,
     borderBottomWidth: 1,
     paddingVertical: styleValues.spacings.small,
+    color: colors.black,
   },
   choiceTextInput: {
-    fontSize: 13,
+    fontSize: bodyStyles.small.fontSize,
     marginTop: styleValues.spacings.medium,
   },
 });

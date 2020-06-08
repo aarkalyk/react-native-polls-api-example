@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import {
-  Text,
   View,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -10,6 +9,8 @@ import {
 
 import { ImageName, images } from '../assets';
 import { colors, styleValues } from '../styles';
+
+import { BodyRegular } from './Body';
 
 interface PropsWithIcon extends TouchableOpacityProps {
   type: 'WithIcon';
@@ -40,7 +41,7 @@ export const PrimaryButton: FC<Props> = (props) => {
 const render = (props: Props) => {
   switch (props.type) {
     case 'WithTitle':
-      return <Text style={styles.title}>{props.title}</Text>;
+      return <BodyRegular style={styles.title}>{props.title}</BodyRegular>;
     case 'WithIcon':
       return <Image source={images[props.iconName]()} style={styles.icon} />;
   }

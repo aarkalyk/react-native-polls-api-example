@@ -7,6 +7,7 @@ export const colors = {
   primary: 'rgb(91,86,119)',
   transparent: 'transparent',
   white: 'white',
+  black: 'rgb(46, 46, 46)',
 };
 
 export type ColorName = keyof typeof colors;

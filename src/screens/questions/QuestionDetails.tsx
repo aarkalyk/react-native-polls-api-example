@@ -1,27 +1,16 @@
-import React, { FC, useMemo } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-import { RootState } from '../../store';
-import { styleValues } from '../../styles';
+import { NavBar } from '../../navigation';
+import { styleValues, colors } from '../../styles';
 import { Card, TouchableIcon } from '../../components';
-import {
-  getHasBeenVoted,
-  getVotedChoiceId,
-  getQuestionById,
-  getChoicesById,
-} from '../../store/selectors';
-import { RootStackParamList, NavBar } from '../../navigation';
 import { choicesActions } from '../../store/slices/choicesSlice';
 
 import { ChoiceListItem } from './components/ChoiceListItem';
-
-type QuestionDetailsRouteProp = RouteProp<
-  RootStackParamList,
-  'QuestionDetails'
->;
+import { useQuestionDetails } from './hooks/useQuestionDetails';
 
 export const questionDetailsRouteName = 'QuestionDetails';
 
@@ -92,37 +81,10 @@ export const QuestionDetails = () => {
   );
 };
 
-const useQuestionDetails = () => {
-  const route = useRoute<QuestionDetailsRouteProp>();
-  const question = useSelector((state: RootState) =>
-    getQuestionById(state, route.params.id),
-  );
-  const choicesById = useSelector(getChoicesById);
-  const hasBeenVoted = useSelector((state: RootState) =>
-    getHasBeenVoted(state, question.id),
-  );
-  const votedChoice = useSelector((state: RootState) =>
-    getVotedChoiceId(state, question.id),
-  );
-
-  const sumOfVotes = useMemo(() => {
-    const sum = question.choice_ids.reduce((acc, currentId) => {
-      return acc + choicesById[currentId].votes;
-    }, 0);
-
-    return sum;
-  }, [hasBeenVoted]);
-
-  return {
-    sumOfVotes,
-    votedChoice,
-    hasBeenVoted,
-    choicesById,
-    question,
-  };
-};
-
 const countPercentage = (value: number, sum: number) => {
+  if (value === 0) {
+    return 0;
+  }
   return (value / sum) * 100;
 };
 
@@ -140,7 +102,7 @@ const styles = StyleSheet.create({
     marginBottom: styleValues.spacings.medium,
   },
   navbarTitle: {
-    color: 'black',
+    color: colors.black,
   },
   questionText: {
     fontSize: 20,

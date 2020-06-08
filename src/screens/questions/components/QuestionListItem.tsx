@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import {
-  Text,
   View,
   Image,
   ViewProps,
@@ -10,9 +9,9 @@ import {
 import { useSelector } from 'react-redux';
 
 import { images } from '../../../assets';
-import { Card } from '../../../components';
+import { Card, BodyRegular } from '../../../components';
 import { RootState } from '../../../store';
-import { styleValues } from '../../../styles';
+import { styleValues, colors } from '../../../styles';
 import { getHasBeenVoted, getQuestionById } from '../../../store/selectors';
 
 interface Props extends ViewProps {
@@ -32,7 +31,7 @@ export const QuestionListItem: FC<Props> = ({ id, onPress }) => {
     <TouchableOpacity style={styles.touchable} onPress={onPress}>
       <Card>
         <View style={styles.container}>
-          <Text style={styles.title}>{question.question}</Text>
+          <BodyRegular style={styles.title}>{question.question}</BodyRegular>
           {hasBeenVoted && (
             <Image source={images.checkMark()} style={styles.icon} />
           )}
@@ -57,7 +56,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 18,
     height: 18,
-    tintColor: 'black',
+    tintColor: colors.black,
     position: 'absolute',
     right: 0,
   },

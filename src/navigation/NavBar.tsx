@@ -1,12 +1,13 @@
 import React, { FC } from 'react';
 import {
   View,
-  Text,
   ViewProps,
   StyleProp,
   TextStyle,
   StyleSheet,
 } from 'react-native';
+
+import { BodyRegular } from '../components';
 import { colors, styleValues } from '../styles';
 
 interface Props extends ViewProps {
@@ -26,7 +27,7 @@ export const NavBar: FC<Props> = ({
   return (
     <View style={[styles.container, style]}>
       {renderLeftItem !== undefined ? renderLeftItem() : <View />}
-      <Text style={[styles.title, titleStyle]}>{title}</Text>
+      <BodyRegular style={[styles.title, titleStyle]}>{title}</BodyRegular>
       {renderRightItem !== undefined ? renderRightItem() : <View />}
     </View>
   );
