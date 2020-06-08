@@ -7,7 +7,7 @@ export const LOADING_SCREEN_TEST_ID = 'LOADING_SCREEN_TEST_ID';
 export const LoadingScreen = () => {
   return (
     <Screen style={styles.screen} testID={LOADING_SCREEN_TEST_ID}>
-      <ActivityIndicator size="small" />
+      <ActivityIndicator size="small" color="white" />
     </Screen>
   );
 };

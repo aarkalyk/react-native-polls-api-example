@@ -54,10 +54,9 @@ const styles = StyleSheet.create({
     paddingRight: styleValues.spacings.medium,
   },
   icon: {
-    width: 18,
-    height: 18,
     tintColor: colors.black,
     position: 'absolute',
     right: 0,
+    ...styleValues.iconSizes.large,
   },
 });

@@ -50,7 +50,10 @@ export const QuestionDetails = () => {
         titleStyle={styles.navbarTitle}
         title={`Question ${question.id}`}
       />
-      <ScrollView style={styles.scrollView}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.questionText}>{question.question}</Text>
         <View style={styles.buttonsContainer}>
           {question.choice_ids.map((id) => {
@@ -58,7 +61,7 @@ export const QuestionDetails = () => {
             const isChosen = hasBeenVoted && votedChoice === id;
             const percents = hasBeenVoted
               ? countPercentage(choice.votes, sumOfVotes)
-              : undefined;
+              : 0;
 
             return (
               <ChoiceListItem

@@ -29,7 +29,7 @@ export const ChoiceListItem: FC<Props> = ({
 }) => {
   useEffect(() => {
     LayoutAnimation.configureNext(LinearAnimationConfig);
-  }, [percents]);
+  }, [hasBeenVoted]);
 
   const borderWidth = hasBeenVoted ? 0 : 1;
   const width = percents ? `${percents}%` : 0;
@@ -86,11 +86,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   icon: {
-    width: 18,
-    height: 18,
     tintColor: colors.black,
     position: 'absolute',
     right: styleValues.spacings.medium,
+    ...styleValues.iconSizes.large,
   },
   title: {
     flexGrow: 1,

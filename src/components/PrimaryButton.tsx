@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   shadow: {
     shadowColor: colors.primary,
-    shadowOpacity: 0.5,
+    shadowOpacity: 0.3,
     shadowRadius: 3,
     shadowOffset: {
       width: 2,
@@ -73,8 +73,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   icon: {
-    width: 15,
-    height: 15,
     tintColor: 'white',
+    ...styleValues.iconSizes.regular,
   },
 });

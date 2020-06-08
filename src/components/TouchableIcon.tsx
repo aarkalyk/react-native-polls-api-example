@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { ImageName, images } from '../assets';
-import { ColorName, colors } from '../styles';
+import { ColorName, colors, styleValues } from '../styles';
 
 interface Props extends TouchableOpacityProps {
   iconName: ImageName;
@@ -55,8 +55,5 @@ const touchableHitSlop = {
 };
 
 const styles = StyleSheet.create({
-  image: {
-    width: 12,
-    height: 12,
-  },
+  image: styleValues.iconSizes.small,
 });
