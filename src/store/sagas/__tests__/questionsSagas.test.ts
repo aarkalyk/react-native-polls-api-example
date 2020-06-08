@@ -6,6 +6,7 @@ import {
   mockQuestionObjectResponse,
   mockQuestionAndChoiceObjects,
   mockQuestionBody,
+  mockNextUrl,
 } from '../../../mocks';
 import { fetchQuestions, postQuestion } from '../questionsSagas';
 import { questionsActions } from '../../../store/slices/questionsSlice';
@@ -16,12 +17,12 @@ describe('questionsSaga', () => {
       jest.clearAllMocks();
     });
 
-    it('dispatches getQuestionsSucceeded action if api call succeeds', async () => {
-      jest
-        .spyOn(APIClient, 'getQuestions')
-        .mockImplementationOnce(() =>
-          Promise.resolve([mockQuestionObjectResponse]),
-        );
+    it('makes the api call with nextUrl if it is available', async () => {
+      jest.spyOn(APIClient, 'getQuestions').mockImplementationOnce(() =>
+        Promise.resolve({
+          data: [mockQuestionObjectResponse],
+        }),
+      );
 
       const dispatched: ReturnType<
         typeof questionsActions.getQuestionsAndChoicesSucceeded
@@ -34,18 +35,60 @@ describe('questionsSaga', () => {
               typeof questionsActions.getQuestionsAndChoicesSucceeded
             >,
           ) => dispatched.push(action),
-          getState: () => ({ api: { url: mockUrl } }),
+          getState: () => ({
+            api: { url: mockUrl },
+            questions: { nextLink: mockNextUrl },
+          }),
         },
         fetchQuestions as Saga<any[]>,
-        questionsActions.getQuestionsRequested({ page: 1 }),
+        questionsActions.getQuestionsRequested(),
+      );
+
+      expect(APIClient.getQuestions).toBeCalledWith({
+        url: mockNextUrl,
+      });
+      expect(dispatched).toEqual([
+        questionsActions.getQuestionsAndChoicesSucceeded({
+          questions: mockQuestionAndChoiceObjects.questionObjects,
+          choices: mockQuestionAndChoiceObjects.choiceObjects,
+        }),
+      ]);
+    });
+
+    it('dispatches getQuestionsSucceeded action if api call succeeds', async () => {
+      jest.spyOn(APIClient, 'getQuestions').mockImplementationOnce(() =>
+        Promise.resolve({
+          nextLink: mockNextUrl,
+          data: [mockQuestionObjectResponse],
+        }),
+      );
+
+      const dispatched: ReturnType<
+        typeof questionsActions.getQuestionsAndChoicesSucceeded
+      >[] = [];
+
+      await runSaga(
+        {
+          dispatch: (
+            action: ReturnType<
+              typeof questionsActions.getQuestionsAndChoicesSucceeded
+            >,
+          ) => dispatched.push(action),
+          getState: () => ({
+            api: { url: mockUrl },
+            questions: { nextLink: undefined },
+          }),
+        },
+        fetchQuestions as Saga<any[]>,
+        questionsActions.getQuestionsRequested(),
       );
 
       expect(APIClient.getQuestions).toBeCalledWith({
         url: mockUrl,
-        page: 1,
       });
       expect(dispatched).toEqual([
         questionsActions.getQuestionsAndChoicesSucceeded({
+          nextLink: mockNextUrl,
           questions: mockQuestionAndChoiceObjects.questionObjects,
           choices: mockQuestionAndChoiceObjects.choiceObjects,
         }),
@@ -66,15 +109,17 @@ describe('questionsSaga', () => {
           dispatch: (
             action: ReturnType<typeof questionsActions.getQuestionsFailed>,
           ) => dispatched.push(action),
-          getState: () => ({ api: { url: mockUrl } }),
+          getState: () => ({
+            api: { url: mockUrl },
+            questions: { nextLink: undefined },
+          }),
         },
         fetchQuestions as Saga<any[]>,
-        questionsActions.getQuestionsRequested({ page: 1 }),
+        questionsActions.getQuestionsRequested(),
       );
 
       expect(APIClient.getQuestions).toBeCalledWith({
         url: mockUrl,
-        page: 1,
       });
       expect(dispatched).toEqual([
         questionsActions.getQuestionsFailed({
@@ -93,7 +138,7 @@ describe('questionsSaga', () => {
       jest
         .spyOn(APIClient, 'postQuestion')
         .mockImplementationOnce(() =>
-          Promise.resolve(mockQuestionObjectResponse),
+          Promise.resolve({ data: mockQuestionObjectResponse }),
         );
 
       const dispatched: ReturnType<

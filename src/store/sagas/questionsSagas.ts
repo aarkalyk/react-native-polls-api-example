@@ -3,27 +3,27 @@ import { Alert } from 'react-native';
 
 import { questionsActions } from '../slices/questionsSlice';
 import { APIClient, APIHelpers } from '../../services';
-import { QuestionObjectResponse } from '../../types/questions';
+import { QuestionObjectResponse, ApiResponseData } from '../../types';
 import { RootState } from '../index';
 
-export function* fetchQuestions(
-  action: ReturnType<typeof questionsActions.getQuestionsRequested>,
-) {
+export function* fetchQuestions() {
   try {
     const url: string = yield select((state: RootState) => state.api.url);
-    const questionsResponse: QuestionObjectResponse[] = yield call(
-      APIClient.getQuestions,
-      {
-        url,
-        page: action.payload.page,
-      },
+    const nextUrl: string = yield select(
+      (state: RootState) => state.questions.nextLink,
     );
+    const questionsResponse: ApiResponseData<
+      QuestionObjectResponse[]
+    > = yield call(APIClient.getQuestions, {
+      url: nextUrl || url,
+    });
 
     const questionAndChoiceObjects = APIHelpers.convertQuestionsResponseToQuestionAndChoiceObjects(
-      questionsResponse,
+      questionsResponse.data,
     );
     yield put(
       questionsActions.getQuestionsAndChoicesSucceeded({
+        nextLink: questionsResponse.nextLink,
         questions: questionAndChoiceObjects.questionObjects,
         choices: questionAndChoiceObjects.choiceObjects,
       }),
@@ -43,13 +43,13 @@ export function* postQuestion(
 ) {
   try {
     const url: string = yield select((state: RootState) => state.api.url);
-    const questionsResponse: QuestionObjectResponse = yield call(
+    const questionsResponse: ApiResponseData<QuestionObjectResponse> = yield call(
       APIClient.postQuestion,
       { url, ...action.payload },
     );
 
     const questionAndChoiceObjects = APIHelpers.convertQuestionsResponseToQuestionAndChoiceObjects(
-      [questionsResponse],
+      [questionsResponse.data],
     );
     Alert.alert('Successfully created a new question');
     yield put(

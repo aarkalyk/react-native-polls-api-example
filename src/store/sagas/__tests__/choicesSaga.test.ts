@@ -21,7 +21,7 @@ describe('choicesSagas', () => {
       jest
         .spyOn(APIClient, 'postVote')
         .mockImplementationOnce(() =>
-          Promise.resolve(mockChoiceObjectResponse),
+          Promise.resolve({ data: mockChoiceObjectResponse }),
         );
 
       const dispatched: ReturnType<

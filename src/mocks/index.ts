@@ -49,6 +49,7 @@ export const mockQuestionBody: QuestionBody = {
 };
 
 export const mockUrl = '/questions';
+export const mockNextUrl = '/questions?2';
 
 export const mockUrlResponse: QuestionsUrlResponse = {
   questions_url: mockUrl,

@@ -1,12 +1,21 @@
 import React, { FC, useEffect, useRef, useCallback } from 'react';
-import { FlatList, StyleSheet, Animated } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Animated,
+  ActivityIndicator,
+} from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { RootState } from '../../store';
-import { Screen, LoadingScreen, PrimaryButton } from '../../components';
 import { NavBar } from '../../navigation';
 import { styleValues, colors } from '../../styles';
+import { Screen, PrimaryButton } from '../../components';
+import {
+  getNextPageExists,
+  getQuestionIds,
+  getQuestionsStatus,
+} from '../../store/selectors';
 import { questionsActions } from '../../store/slices/questionsSlice';
 
 import { questionDetailsRouteName } from './QuestionDetails';
@@ -15,12 +24,14 @@ import { questionCreationRouteName } from './QuestionCreation';
 
 export const questionsRouteName = 'Questions';
 export const CREATE_NEW_BUTTON_TEST_ID = 'CREATE_NEW_BUTTON_TEST_ID';
+export const ACTIVITY_INDICATOR_TEST_ID = 'ACTIVITY_INDICATOR_TEST_ID';
 
 export const Questions: FC<{}> = () => {
   const {
     ids,
     status,
     opacity,
+    onEndReached,
     onPressCreate,
     onPressQuestion,
   } = useQuestions();
@@ -29,9 +40,14 @@ export const Questions: FC<{}> = () => {
     <QuestionListItem id={item} onPress={onPressQuestion(item)} />
   );
 
-  if (status === 'idle' || status === 'loading') {
-    return <LoadingScreen />;
-  }
+  const renderListFooter = () =>
+    status === 'loading' ? (
+      <ActivityIndicator
+        testID={ACTIVITY_INDICATOR_TEST_ID}
+        size="small"
+        color="white"
+      />
+    ) : null;
 
   return (
     <Screen>
@@ -44,6 +60,9 @@ export const Questions: FC<{}> = () => {
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           showsVerticalScrollIndicator={false}
+          ListFooterComponent={renderListFooter()}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={0}
         />
         <PrimaryButton
           type="WithIcon"
@@ -82,11 +101,17 @@ const useQuestions = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(questionsActions.getQuestionsRequested({ page: 1 }));
+    dispatch(questionsActions.getQuestionsRequested());
   }, [dispatch]);
 
-  const ids = useSelector((state: RootState) => state.questions.ids);
-  const status = useSelector((state: RootState) => state.questions.status);
+  const ids = useSelector(getQuestionIds);
+  const status = useSelector(getQuestionsStatus);
+  const isNextPageExist = useSelector(getNextPageExists);
+  const onEndReached = () => {
+    if (isNextPageExist) {
+      dispatch(questionsActions.getQuestionsRequested());
+    }
+  };
 
   const navigation = useNavigation();
   const onPressQuestion = (id: number) => () => {
@@ -100,6 +125,7 @@ const useQuestions = () => {
     ids,
     status,
     opacity,
+    onEndReached,
     onPressCreate,
     onPressQuestion,
   };

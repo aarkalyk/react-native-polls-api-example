@@ -54,13 +54,5 @@ const choicesSlice = createSlice({
   },
 });
 
-// created separately because this action doesn't affect the store
-const postVoteFailed = createAction<{ errorMessage: string }>(
-  'POST_CHOICE_FAILED',
-);
-
 export const choicesReducer = choicesSlice.reducer;
-export const choicesActions = {
-  ...choicesSlice.actions,
-  postVoteFailed,
-};
+export const choicesActions = choicesSlice.actions;

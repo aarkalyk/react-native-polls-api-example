@@ -21,7 +21,7 @@ describe('questionsSlice', () => {
     it('should handle getQuestionsRequested action', () => {
       const newState = questionsReducer(
         mockEmptyState,
-        questionsActions.getQuestionsRequested({ page: 1 }),
+        questionsActions.getQuestionsRequested(),
       );
 
       expect(newState).toEqual({

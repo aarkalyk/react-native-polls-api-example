@@ -11,6 +11,7 @@ import {
   getHasBeenVoted,
   getVotedChoiceId,
   getQuestionById,
+  getChoicesById,
 } from '../../store/selectors';
 import { RootStackParamList, NavBar } from '../../navigation';
 import { choicesActions } from '../../store/slices/choicesSlice';
@@ -96,7 +97,7 @@ const useQuestionDetails = () => {
   const question = useSelector((state: RootState) =>
     getQuestionById(state, route.params.id),
   );
-  const choicesById = useSelector((state: RootState) => state.choices.byId);
+  const choicesById = useSelector(getChoicesById);
   const hasBeenVoted = useSelector((state: RootState) =>
     getHasBeenVoted(state, question.id),
   );

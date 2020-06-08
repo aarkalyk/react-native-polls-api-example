@@ -84,5 +84,20 @@ describe('choicesSlice', () => {
         },
       });
     });
+
+    it('should handle postQuestionSucceeded action', () => {
+      const newState = choicesReducer(
+        mockEmptyState,
+        questionsActions.postQuestionSucceeded({
+          questions: mockQuestionAndChoiceObjects.questionObjects,
+          choices: mockQuestionAndChoiceObjects.choiceObjects,
+        }),
+      );
+
+      expect(newState).toEqual({
+        ...mockEmptyState,
+        byId: { [mockChoiceObject.id]: mockChoiceObject },
+      });
+    });
   });
 });

@@ -74,6 +74,31 @@ const convertChoiceResponseToChoiceObject = ({
   return choiceObject;
 };
 
+const parseLinks = (response: Response) => {
+  const linksString = response.headers.get('link');
+  const linksData = linksString?.split('link:');
+  const data = linksData?.length == 2 ? linksData[1] : linksString;
+  const parsedData: { [key in string]: string } = {};
+
+  const linkAndRelNames = data?.split(',');
+
+  if (linkAndRelNames === undefined) {
+    return undefined;
+  }
+
+  for (const item of linkAndRelNames) {
+    const linkInfo = /<([^>]+)>;\s+rel="([^"]+)"/gi.exec(item);
+
+    const relName = linkInfo && linkInfo[2];
+    const link = linkInfo && linkInfo[1];
+    if (relName && link) {
+      parsedData[relName] = link;
+    }
+  }
+
+  return parsedData;
+};
+
 const getGenericErrorMessage = () => 'Unexpected error occurred';
 
 export const APIHelpers = {
@@ -82,4 +107,5 @@ export const APIHelpers = {
   getGenericErrorMessage,
   convertChoiceResponseToChoiceObject,
   convertQuestionsResponseToQuestionAndChoiceObjects,
+  parseLinks,
 };

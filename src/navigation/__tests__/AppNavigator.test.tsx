@@ -15,7 +15,10 @@ import {
 } from '../../mocks';
 import { questionsActions } from '../../store/slices/questionsSlice';
 import { choicesActions } from '../../store/slices/choicesSlice';
-import { CREATE_NEW_BUTTON_TEST_ID } from '../../screens/questions/Questions';
+import {
+  CREATE_NEW_BUTTON_TEST_ID,
+  ACTIVITY_INDICATOR_TEST_ID,
+} from '../../screens/questions/Questions';
 import {
   QUESTION_TITLE_TEXT_INPUT_TEST_ID,
   CHOICE_TEXT_INPUT_TEST_ID,
@@ -83,26 +86,26 @@ describe('AppNavigator', () => {
 
   describe('Questions', () => {
     describe('empty state', () => {
-      it('should dispatch questionsActions.getQuestionsRequested action and display loading screen', async () => {
+      it('should dispatch questionsActions.getQuestionsRequested action and display activity indicator', async () => {
         const { wrapper, dispatch } = setup({
           questions: {
-            status: 'idle',
+            status: 'loading',
             byId: {},
             ids: [],
             creationStatus: 'idle',
           },
         });
 
-        // check if loading screen is displayed
-        const loadingScreen = await wrapper.queryByTestId(
-          LOADING_SCREEN_TEST_ID,
+        // check if activity indicator is displayed
+        const activityIndicator = await wrapper.queryByTestId(
+          ACTIVITY_INDICATOR_TEST_ID,
         );
-        await waitFor(() => loadingScreen);
+        await waitFor(() => activityIndicator);
 
         expect(dispatch).toHaveBeenCalledWith(
-          questionsActions.getQuestionsRequested({ page: 1 }),
+          questionsActions.getQuestionsRequested(),
         );
-        expect(loadingScreen).not.toBeNull();
+        expect(activityIndicator).not.toBeNull();
       });
     });
 
@@ -180,6 +183,10 @@ describe('AppNavigator', () => {
       });
 
       describe('QuestionCreation', () => {
+        beforeAll(() => {
+          jest.clearAllMocks();
+        });
+
         it('should take inputs from TextInputs and submit as QuestionBody', async () => {
           const { wrapper, dispatch } = setup();
 
@@ -201,14 +208,23 @@ describe('AppNavigator', () => {
             ),
           );
 
-          // Enter choice
-          const choiceTextInput = await wrapper.getByTestId(
-            CHOICE_TEXT_INPUT_TEST_ID,
+          // Enter choice 1
+          const choiceTextInput1 = await wrapper.getByTestId(
+            CHOICE_TEXT_INPUT_TEST_ID + '_1',
           );
           act(() =>
-            fireEvent.changeText(choiceTextInput, mockChoiceObject.choice),
+            fireEvent.changeText(choiceTextInput1, mockChoiceObject.choice),
           );
-          await waitFor(() => choiceTextInput);
+          await waitFor(() => choiceTextInput1);
+
+          // Enter choice 2
+          const choiceTextInput2 = await wrapper.getByTestId(
+            CHOICE_TEXT_INPUT_TEST_ID + '_2',
+          );
+          act(() =>
+            fireEvent.changeText(choiceTextInput2, mockChoiceObject.choice),
+          );
+          await waitFor(() => choiceTextInput2);
 
           // Submit
           const submitButton = await wrapper.getByTestId(
@@ -219,7 +235,14 @@ describe('AppNavigator', () => {
 
           expect(dispatch).toHaveBeenCalledWith(
             questionsActions.postQuestionRequested({
-              questionBody: mockQuestionBody,
+              questionBody: {
+                ...mockQuestionBody,
+                // duplicating choices since we entered the same choice twice above
+                choices: [
+                  ...mockQuestionBody.choices,
+                  mockQuestionBody.choices[0],
+                ],
+              },
             }),
           );
         });

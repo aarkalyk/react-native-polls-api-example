@@ -3,9 +3,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { StatusBar } from 'react-native';
 
-import { RootState } from '../store';
 import { ApiCallStatus } from '../types';
 import { LoadingScreen } from '../components';
+import { getApiStatus } from '../store/selectors';
 import { apiActions } from '../store/slices/apiSlice';
 
 import { MainStackNavigator } from './MainStackNavigator';
@@ -15,7 +15,7 @@ export const AppNavigator = () => {
   useEffect(() => {
     dispatch(apiActions.getUrlRequested());
   }, [dispatch]);
-  const status = useSelector((state: RootState) => state.api.status);
+  const status = useSelector(getApiStatus);
 
   return (
     <NavigationContainer>

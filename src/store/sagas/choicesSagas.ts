@@ -1,7 +1,7 @@
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 
 import { APIClient, APIHelpers } from '../../services';
-import { ChoiceObjectResponse } from '../../types/questions';
+import { ChoiceObjectResponse, ApiResponseData } from '../../types';
 import { choicesActions } from '../slices/choicesSlice';
 import { RootState } from '..';
 
@@ -10,15 +10,16 @@ export function* postVote(
 ) {
   try {
     const url: string = yield select((state: RootState) => state.api.url);
-    const choiceResponse: ChoiceObjectResponse = yield call(
+    const choiceResponse: ApiResponseData<ChoiceObjectResponse> = yield call(
       APIClient.postVote,
       {
         url,
         ...action.payload,
       },
     );
+
     const choice = APIHelpers.convertChoiceResponseToChoiceObject({
-      choiceResponse,
+      choiceResponse: choiceResponse.data,
     });
 
     yield put(choicesActions.postVoteSucceeded({ choice }));

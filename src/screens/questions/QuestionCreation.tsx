@@ -73,7 +73,7 @@ export const QuestionCreation = () => {
             placeholder={localState.choicesValues.byId[id].placeHolder}
             style={[styles.textInput, styles.choiceTextInput]}
             multiline={false}
-            testID={CHOICE_TEXT_INPUT_TEST_ID}
+            testID={CHOICE_TEXT_INPUT_TEST_ID + '_' + id}
             onChangeText={(text) => {
               localDispatch(choiceValueChanged({ id, value: text }));
             }}

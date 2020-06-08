@@ -11,6 +11,7 @@ export type QuestionsState = {
   status: ApiCallStatus;
   byId: { [id: number]: QuestionObject };
   ids: number[];
+  nextLink?: string;
   errorMessage?: string;
   creationStatus: ApiCallStatus;
   creationError?: string;
@@ -27,7 +28,7 @@ const questionsSlice = createSlice({
   name: 'questions',
   initialState,
   reducers: {
-    getQuestionsRequested(state, _: PayloadAction<{ page: number }>) {
+    getQuestionsRequested(state) {
       state.status = 'loading';
     },
     getQuestionsAndChoicesSucceeded(
@@ -35,11 +36,13 @@ const questionsSlice = createSlice({
       action: PayloadAction<{
         questions: QuestionObject[];
         choices: ChoiceObject[];
+        nextLink?: string;
       }>,
     ) {
-      const { questions } = action.payload;
+      const { questions, nextLink } = action.payload;
 
       state.status = 'success';
+      state.nextLink = nextLink;
       questions.forEach((question) => {
         if (!(question.id in state.byId)) {
           state.ids.push(question.id);

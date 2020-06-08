@@ -4,13 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
 import { QuestionBody } from '../../../types';
+import { getCreationStatus } from '../../../store/selectors';
 import { questionsActions } from '../../../store/slices/questionsSlice';
-import { RootState } from 'src/store';
 
 export const useQuestionCreation = () => {
-  const status = useSelector(
-    (state: RootState) => state.questions.creationStatus,
-  );
+  const status = useSelector(getCreationStatus);
   const previousStatus = useRef(status);
   const navigation = useNavigation();
   useEffect(() => {
@@ -34,7 +32,9 @@ export const useQuestionCreation = () => {
     if (isQuestionBodyValid(questionBody)) {
       dispatch(questionsActions.postQuestionRequested({ questionBody }));
     } else {
-      Alert.alert('Please, make sure that your question has at least 1 choice');
+      Alert.alert(
+        'Please, make sure that your question has at least 2 choices',
+      );
     }
   };
 
@@ -91,7 +91,7 @@ export const reducer = (state: State, action: Actions): State => {
 };
 
 const isQuestionBodyValid = (questionBody: QuestionBody) =>
-  questionBody.question.length > 0 && questionBody.choices.length > 0;
+  questionBody.question.length > 0 && questionBody.choices.length > 1;
 
 const convertStateToQuestionBody = (state: State) => {
   const choices = state.choicesValues.ids
@@ -156,8 +156,13 @@ const initialState: State = {
         placeHolder: 'Choice 1',
         value: '',
       },
+      [2]: {
+        id: 1,
+        placeHolder: 'Choice 2',
+        value: '',
+      },
     },
-    ids: [1],
+    ids: [1, 2],
   },
   nextChoiceId: 2,
 };

@@ -4,6 +4,8 @@ import {
   ChoiceObjectResponse,
   QuestionBody,
 } from '../types/questions';
+import { APIHelpers } from './APIHelpers';
+import { ApiResponseData } from '../types';
 
 export const API_BASE_URL = 'https://polls.apiblueprint.org';
 
@@ -12,9 +14,8 @@ const getUrl = () => {
   return client<QuestionsUrlResponse>(endpoint, 'GET');
 };
 
-type GetQuestionsProps = { url: string; page?: number };
-const getQuestions = ({ url, page }: GetQuestionsProps) => {
-  const endpoint = API_BASE_URL + url + (page !== undefined ? '?' + page : '');
+const getQuestions = ({ url }: { url: string }) => {
+  const endpoint = API_BASE_URL + url;
   return client<QuestionObjectResponse[]>(endpoint, 'GET');
 };
 
@@ -52,7 +53,7 @@ const client = <T, S = any>(
   endpoint: string,
   method: 'POST' | 'GET',
   body?: S,
-): Promise<T> => {
+): Promise<ApiResponseData<T>> => {
   const config: RequestInit = {
     method,
     headers: {
@@ -65,7 +66,12 @@ const client = <T, S = any>(
   }
 
   return fetch(endpoint, config).then(async (response) => {
-    const data = await response.json();
+    const linksInfo = APIHelpers.parseLinks(response);
+    const responseData = await response.json();
+    const data = {
+      nextLink: linksInfo?.next,
+      data: responseData,
+    };
     if (response.ok) {
       return data;
     } else {

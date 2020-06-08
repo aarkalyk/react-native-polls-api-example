@@ -14,7 +14,9 @@ describe('apiSagas', () => {
     it('dispatches getUrlSucceeded action if api call succeeds', async () => {
       jest
         .spyOn(APIClient, 'getUrl')
-        .mockImplementationOnce(() => Promise.resolve(mockUrlResponse));
+        .mockImplementationOnce(() =>
+          Promise.resolve({ data: mockUrlResponse }),
+        );
 
       const dispatched: ReturnType<typeof apiActions.getUrlSucceeded>[] = [];
 
