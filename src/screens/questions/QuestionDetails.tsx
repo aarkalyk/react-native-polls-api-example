@@ -29,7 +29,10 @@ export const QuestionDetails = () => {
     question_id: number;
     choice_id: number;
   }) => () => {
-    dispatch(choicesActions.postVoteRequested(args));
+    // Added the check for testing purposes. Since TouchableOpacity mock doesn't support functionality of disabling (https://github.com/callstack/react-native-testing-library/issues/156#issuecomment-483125409)
+    if (!hasBeenVoted) {
+      dispatch(choicesActions.postVoteRequested(args));
+    }
   };
 
   const renderLeftItem = () => (

@@ -15,7 +15,8 @@ import { questionsActions } from '../../../store/slices/questionsSlice';
 import {
   QUESTION_TITLE_TEXT_INPUT_TEST_ID,
   CHOICE_TEXT_INPUT_TEST_ID,
-  QUESTION_SUBMIT_BUTTON,
+  QUESTION_SUBMIT_BUTTON_TEST_ID,
+  ADD_CHOICE_BUTTON_TEST_ID,
   QuestionCreation,
 } from '../../../screens/questions/QuestionCreation';
 
@@ -53,7 +54,7 @@ const setup = (state?: Partial<RootState>) => {
 };
 
 describe('QuestionDetails', () => {
-  it('should take inputs from TextInputs and submit as QuestionBody', async () => {
+  it('should take inputs from TextInputs and dispatch questionsActions.postQuestionRequested', async () => {
     const { wrapper, dispatch } = setup();
 
     // Enter question title
@@ -67,20 +68,22 @@ describe('QuestionDetails', () => {
 
     // Enter choice 1
     const choiceTextInput1 = await wrapper.getByTestId(
-      CHOICE_TEXT_INPUT_TEST_ID + '_1',
+      CHOICE_TEXT_INPUT_TEST_ID + '1',
     );
     act(() => fireEvent.changeText(choiceTextInput1, mockChoiceObject.choice));
     await waitFor(() => choiceTextInput1);
 
     // Enter choice 2
     const choiceTextInput2 = await wrapper.getByTestId(
-      CHOICE_TEXT_INPUT_TEST_ID + '_2',
+      CHOICE_TEXT_INPUT_TEST_ID + '2',
     );
     act(() => fireEvent.changeText(choiceTextInput2, mockChoiceObject.choice));
     await waitFor(() => choiceTextInput2);
 
     // Submit
-    const submitButton = await wrapper.getByTestId(QUESTION_SUBMIT_BUTTON);
+    const submitButton = await wrapper.getByTestId(
+      QUESTION_SUBMIT_BUTTON_TEST_ID,
+    );
     act(() => fireEvent(submitButton, 'press'));
     await waitFor(() => submitButton);
 
@@ -93,5 +96,34 @@ describe('QuestionDetails', () => {
         },
       }),
     );
+  });
+
+  it('should NOT dispatch questionsActions.postQuestionRequested if info is missing', async () => {
+    const { wrapper, dispatch } = setup();
+
+    // Press submit
+    const submitButton = await wrapper.getByTestId(
+      QUESTION_SUBMIT_BUTTON_TEST_ID,
+    );
+    act(() => fireEvent(submitButton, 'press'));
+    await waitFor(() => submitButton);
+
+    // questionsActions.postQuestionRequested not dispatched since we haven't provided any 'choices'
+    expect(dispatch).not.toHaveBeenCalled();
+  });
+
+  it('should add new text input for choice input when add more button pressed', async () => {
+    const { wrapper, dispatch } = setup();
+
+    expect(wrapper.queryByTestId(CHOICE_TEXT_INPUT_TEST_ID + '3')).toBeNull();
+
+    // Press add more
+    const addMoreButton = await wrapper.getByTestId(ADD_CHOICE_BUTTON_TEST_ID);
+    await waitFor(() => addMoreButton);
+    act(() => fireEvent(addMoreButton, 'press'));
+
+    expect(
+      wrapper.queryByTestId(CHOICE_TEXT_INPUT_TEST_ID + '3'),
+    ).not.toBeNull();
   });
 });

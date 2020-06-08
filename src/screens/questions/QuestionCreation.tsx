@@ -22,7 +22,8 @@ export const questionCreationRouteName = 'QuestionCreation';
 export const QUESTION_TITLE_TEXT_INPUT_TEST_ID =
   'QUESTION_TITLE_TEXT_INPUT_TEST_ID';
 export const CHOICE_TEXT_INPUT_TEST_ID = 'CHOICE_TEXT_INPUT_TEST_ID';
-export const QUESTION_SUBMIT_BUTTON = 'QUESTION_SUBMIT_BUTTON';
+export const QUESTION_SUBMIT_BUTTON_TEST_ID = 'QUESTION_SUBMIT_BUTTON_TEST_ID';
+export const ADD_CHOICE_BUTTON_TEST_ID = 'ADD_CHOICE_BUTTON_TEST_ID_';
 
 export const QuestionCreation = () => {
   const {
@@ -44,7 +45,7 @@ export const QuestionCreation = () => {
 
     return (
       <TouchableIcon
-        testID={QUESTION_SUBMIT_BUTTON}
+        testID={QUESTION_SUBMIT_BUTTON_TEST_ID}
         iconName="check"
         iconColor="primary"
         iconSize={{ width: 15, height: 15 }}
@@ -78,7 +79,7 @@ export const QuestionCreation = () => {
             placeholder={localState.choicesValues.byId[id].placeHolder}
             style={[styles.textInput, styles.choiceTextInput]}
             multiline={false}
-            testID={CHOICE_TEXT_INPUT_TEST_ID + '_' + id}
+            testID={CHOICE_TEXT_INPUT_TEST_ID + id}
             onChangeText={(text) => {
               localDispatch(choiceValueChanged({ id, value: text }));
             }}
@@ -91,6 +92,7 @@ export const QuestionCreation = () => {
           }}
           type="WithIcon"
           iconName="plus"
+          testID={ADD_CHOICE_BUTTON_TEST_ID}
         />
       </ScrollView>
     </Card>

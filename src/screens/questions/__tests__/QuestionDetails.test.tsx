@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from 'react-native-testing-library';
+import { render, fireEvent, waitFor } from 'react-native-testing-library';
 import { act } from 'react-test-renderer';
 import { Provider } from 'react-redux';
 
@@ -61,7 +61,7 @@ describe('QuestionDetails', () => {
     expect(choiceTitle).not.toBeNull();
   });
 
-  it('should dispatch choicesActions.postVoteRequested when tapping on ChoiceListItem', async () => {
+  it('should dispatch choicesActions.postVoteRequested when tapping on ChoiceListItem if not voted yet', async () => {
     const { wrapper, dispatch } = setup();
 
     const choiceItem = await wrapper.getByText(mockChoiceObject.choice);
@@ -73,5 +73,21 @@ describe('QuestionDetails', () => {
         choice_id: mockChoiceId,
       }),
     );
+  });
+
+  it('should NOT dispatch choicesActions.postVoteRequested when tapping on ChoiceListItem if already voted', async () => {
+    const { wrapper, dispatch } = setup({
+      ...mockReduxStoreState,
+      choices: {
+        ...mockReduxStoreState.choices,
+        votedChoiceByQuestionId: { [mockQuestionId]: mockChoiceId },
+      },
+    });
+
+    const choiceItem = await wrapper.getByText(mockChoiceObject.choice);
+    await waitFor(() => choiceItem);
+    act(() => fireEvent(choiceItem, 'press'));
+
+    expect(dispatch).not.toHaveBeenCalled();
   });
 });
