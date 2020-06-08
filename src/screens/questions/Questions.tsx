@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
   flatListContainer: {
     flexGrow: 1,
     paddingHorizontal: styleValues.spacings.medium,
+    paddingBottom: styleValues.spacings.extraLarge,
   },
   primaryButtonContainer: {
     position: 'absolute',
