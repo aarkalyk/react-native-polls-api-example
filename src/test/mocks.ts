@@ -56,7 +56,7 @@ export const mockUrlResponse: QuestionsUrlResponse = {
   questions_url: mockUrl,
 };
 
-export const mockReduxStoreState: Partial<RootState> = {
+export const mockReduxStoreState: RootState = {
   questions: {
     status: 'success',
     byId: { [mockQuestionId]: mockQuestionObject },

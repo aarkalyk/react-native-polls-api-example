@@ -5,6 +5,7 @@ import {
   Animated,
   ActivityIndicator,
   View,
+  Platform,
 } from 'react-native';
 
 import { NavBar } from '../../navigation/NavBar';
@@ -17,6 +18,7 @@ import { QuestionListItem } from './components/QuestionListItem';
 export const questionsRouteName = 'Questions';
 export const CREATE_NEW_BUTTON_TEST_ID = 'CREATE_NEW_BUTTON_TEST_ID';
 export const ACTIVITY_INDICATOR_TEST_ID = 'ACTIVITY_INDICATOR_TEST_ID';
+export const QUESTIONS_LIST_ID = 'QUESTIONS_LIST_ID';
 
 export const Questions = () => {
   const {
@@ -54,7 +56,11 @@ export const Questions = () => {
           showsVerticalScrollIndicator={false}
           ListFooterComponent={renderListFooter()}
           onEndReached={onEndReached}
-          onEndReachedThreshold={0}
+          onEndReachedThreshold={Platform.select({
+            ios: 0,
+            android: 0.5,
+          })}
+          testID={QUESTIONS_LIST_ID}
         />
         <View style={styles.primaryButtonContainer}>
           <PrimaryButton

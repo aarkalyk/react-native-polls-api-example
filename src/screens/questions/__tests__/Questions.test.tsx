@@ -1,14 +1,20 @@
 import React from 'react';
-import { render, waitFor } from 'react-native-testing-library';
+import { render, waitFor, fireEvent } from 'react-native-testing-library';
 import { Provider } from 'react-redux';
 
 import { RootState, createStore } from '../../../store';
-import { mockQuestionObject, mockReduxStoreState } from '../../../test/mocks';
+import {
+  mockQuestionObject,
+  mockReduxStoreState,
+  mockNextUrl,
+} from '../../../test/mocks';
 import { questionsActions } from '../../../store/slices/questionsSlice';
 import {
   ACTIVITY_INDICATOR_TEST_ID,
   Questions,
+  QUESTIONS_LIST_ID,
 } from '../../../screens/questions/Questions';
+import { ScrollView } from 'react-native';
 
 jest.mock('@react-navigation/native', () => {
   const actualNav = jest.requireActual('@react-navigation/native');
@@ -36,6 +42,24 @@ const setup = (state?: Partial<RootState>) => {
     wrapper,
     dispatch,
   };
+};
+
+const scrollEventData = {
+  nativeEvent: {
+    contentOffset: {
+      y: 500,
+    },
+    contentSize: {
+      // Dimensions of the scrollable content
+      height: 500,
+      width: 100,
+    },
+    layoutMeasurement: {
+      // Dimensions of the device
+      height: 100,
+      width: 100,
+    },
+  },
 };
 
 describe('Questions', () => {
@@ -74,6 +98,53 @@ describe('Questions', () => {
       await waitFor(() => questionTitle);
 
       expect(questionTitle).not.toBeNull();
+    });
+  });
+
+  describe('pagination', () => {
+    describe('when nextUrl is available', () => {
+      it('should dispatch getQuestionsRequested on end reached', () => {
+        const { wrapper, dispatch } = setup({
+          questions: {
+            ...mockReduxStoreState.questions,
+            nextLink: mockNextUrl,
+            status: 'success',
+          },
+        });
+
+        fireEvent.scroll(
+          wrapper.getByTestId(QUESTIONS_LIST_ID),
+          scrollEventData,
+        );
+
+        // called once on render and once scroll end reached
+        expect(dispatch.mock.calls).toEqual([
+          [questionsActions.getQuestionsRequested()],
+          [questionsActions.getQuestionsRequested()],
+        ]);
+      });
+    });
+
+    describe('when nextUrl is NOT available', () => {
+      it('should NOT dispatch getQuestionsRequested on end reached', () => {
+        const { wrapper, dispatch } = setup({
+          questions: {
+            ...mockReduxStoreState.questions,
+            nextLink: undefined,
+            status: 'success',
+          },
+        });
+
+        fireEvent.scroll(
+          wrapper.getByTestId(QUESTIONS_LIST_ID),
+          scrollEventData,
+        );
+
+        // called only once on render
+        expect(dispatch.mock.calls).toEqual([
+          [questionsActions.getQuestionsRequested()],
+        ]);
+      });
     });
   });
 });
