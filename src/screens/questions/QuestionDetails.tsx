@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
-import { NavBar } from '../../navigation';
+import { NavBar } from '../../navigation/NavBar';
 import { styleValues, colors } from '../../styles';
 import { Card, TouchableIcon } from '../../components';
 import { choicesActions } from '../../store/slices/choicesSlice';
@@ -82,7 +82,7 @@ export const QuestionDetails = () => {
 };
 
 const countPercentage = (value: number, sum: number) => {
-  if (value === 0) {
+  if (!sum || !value) {
     return 0;
   }
   return (value / sum) * 100;

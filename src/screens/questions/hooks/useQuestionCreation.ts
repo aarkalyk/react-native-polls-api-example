@@ -164,5 +164,5 @@ const initialState: State = {
     },
     ids: [1, 2],
   },
-  nextChoiceId: 2,
+  nextChoiceId: 3,
 };

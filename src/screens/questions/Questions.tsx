@@ -4,9 +4,10 @@ import {
   StyleSheet,
   Animated,
   ActivityIndicator,
+  View,
 } from 'react-native';
 
-import { NavBar } from '../../navigation';
+import { NavBar } from '../../navigation/NavBar';
 import { styleValues, colors } from '../../styles';
 import { Screen, PrimaryButton } from '../../components';
 
@@ -55,16 +56,14 @@ export const Questions = () => {
           onEndReached={onEndReached}
           onEndReachedThreshold={0}
         />
-        <PrimaryButton
-          type="WithIcon"
-          iconName="plus"
-          style={{
-            position: 'absolute',
-            bottom: styleValues.spacings.medium,
-          }}
-          onPress={onPressCreate}
-          testID={CREATE_NEW_BUTTON_TEST_ID}
-        />
+        <View style={styles.primaryButtonContainer}>
+          <PrimaryButton
+            type="WithIcon"
+            iconName="plus"
+            onPress={onPressCreate}
+            testID={CREATE_NEW_BUTTON_TEST_ID}
+          />
+        </View>
       </Animated.View>
     </Screen>
   );
@@ -84,5 +83,13 @@ const styles = StyleSheet.create({
   flatListContainer: {
     flexGrow: 1,
     paddingHorizontal: styleValues.spacings.medium,
+  },
+  primaryButtonContainer: {
+    position: 'absolute',
+    bottom: styleValues.spacings.medium,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

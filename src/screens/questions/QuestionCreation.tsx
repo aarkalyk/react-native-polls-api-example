@@ -8,7 +8,7 @@ import {
   PrimaryButton,
   TouchableIcon,
 } from '../../components';
-import { NavBar } from '../../navigation';
+import { NavBar } from '../../navigation/NavBar';
 import { styleValues, colors } from '../../styles';
 
 import {

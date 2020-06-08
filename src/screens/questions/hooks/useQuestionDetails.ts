@@ -9,7 +9,7 @@ import {
   getChoicesById,
 } from '../../../store/selectors';
 import { RootState } from '../../../store';
-import { RootStackParamList } from '../../../navigation';
+import { RootStackParamList } from '../../../navigation/types';
 
 type QuestionDetailsRouteProp = RouteProp<
   RootStackParamList,

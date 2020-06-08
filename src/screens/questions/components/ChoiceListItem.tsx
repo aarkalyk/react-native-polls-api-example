@@ -32,7 +32,7 @@ export const ChoiceListItem: FC<Props> = ({
   }, [percents]);
 
   const borderWidth = hasBeenVoted ? 0 : 1;
-  const width = `${percents}%`;
+  const width = percents ? `${percents}%` : 0;
 
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled}>

@@ -14,11 +14,6 @@ import {
   questionCreationRouteName,
 } from '../screens/questions/QuestionCreation';
 
-export type RootStackParamList = {
-  [questionsRouteName]: undefined;
-  [questionDetailsRouteName]: { id: number };
-};
-
 const Stack = createStackNavigator();
 
 export const MainStackNavigator = () => {
