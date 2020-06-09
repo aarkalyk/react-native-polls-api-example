@@ -62,7 +62,7 @@ export const QuestionDetails = () => {
           {question.choice_ids.map((id) => {
             const choice = choicesById[id];
             const isChosen = hasBeenVoted && votedChoice === id;
-            const percents = hasBeenVoted
+            const percentage = hasBeenVoted
               ? countPercentage(choice.votes, sumOfVotes)
               : 0;
 
@@ -75,7 +75,7 @@ export const QuestionDetails = () => {
                   question_id: question.id,
                   choice_id: id,
                 })}
-                percents={percents}
+                percentage={percentage}
                 isChosen={isChosen}
                 hasBeenVoted={hasBeenVoted}
               />

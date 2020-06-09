@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
-import { Animated } from 'react-native';
+import { Animated, Platform } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 
@@ -21,7 +21,10 @@ export const useQuestions = () => {
     };
 
     Animated.timing(opacity, {
-      duration: 500,
+      duration: Platform.select({
+        ios: 500,
+        android: 300,
+      }),
       toValue: value[option],
       useNativeDriver: true,
     }).start();

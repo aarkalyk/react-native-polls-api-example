@@ -1,9 +1,9 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import {
   View,
   Image,
+  Animated,
   StyleSheet,
-  LayoutAnimation,
   TouchableOpacityProps,
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -14,64 +14,74 @@ import { colors, styleValues } from '../../../styles';
 
 interface Props extends TouchableOpacityProps {
   title: string;
-  percents?: number;
+  percentage: number;
   isChosen?: boolean;
   hasBeenVoted: boolean;
 }
 
 export const ChoiceListItem: FC<Props> = ({
   title,
-  percents,
+  percentage,
   onPress,
   isChosen,
   disabled,
   hasBeenVoted,
 }) => {
-  useEffect(() => {
-    LayoutAnimation.configureNext(LinearAnimationConfig);
-  }, [hasBeenVoted]);
-
-  const borderWidth = hasBeenVoted ? 0 : 1;
-  const width = percents ? `${percents}%` : 0;
+  const { width } = useProgressBarAnimation({
+    percentage,
+    hasBeenVoted,
+  });
 
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled}>
-      <View style={[styles.container, { borderWidth }]}>
-        <View style={[styles.percentageBar, { width }]} />
-        {!hasBeenVoted && (
-          <BodySmall style={[styles.title, { textAlign: 'center' }]}>
-            {title}
-          </BodySmall>
+      <View style={styles.container}>
+        <Animated.View
+          style={[StyleSheet.absoluteFill, styles.percentageBar, { width }]}
+        />
+        <BodySmall style={styles.title}>{title}</BodySmall>
+        {hasBeenVoted && (
+          <View style={styles.percentageContainer}>
+            <BodySmall style={styles.percentage}>
+              {getPercentageString(percentage)}
+            </BodySmall>
+            {isChosen && (
+              <Image source={images.checkMark()} style={styles.icon} />
+            )}
+          </View>
         )}
-        {hasBeenVoted && <BodySmall style={styles.title}>{title}</BodySmall>}
-        {isChosen && <Image source={images.checkMark()} style={styles.icon} />}
       </View>
     </TouchableOpacity>
   );
 };
 
-const LinearAnimationConfig = {
-  duration: 500,
-  create: {
-    type: LayoutAnimation.Types.easeInEaseOut,
-    property: LayoutAnimation.Properties.scaleXY,
-  },
-  update: {
-    type: LayoutAnimation.Types.easeInEaseOut,
-  },
+const useProgressBarAnimation = ({
+  percentage,
+  hasBeenVoted,
+}: Pick<Props, 'percentage' | 'hasBeenVoted'>) => {
+  const initialPercentage = hasBeenVoted ? percentage : 0;
+  const progress = useRef(new Animated.Value(initialPercentage)).current;
+  useEffect(() => {
+    Animated.timing(progress, {
+      duration: 300,
+      toValue: percentage,
+      useNativeDriver: false, // nativeDriver does not support animating width unfortunately
+    }).start();
+  }, [percentage]);
+
+  const width = progress.interpolate({
+    inputRange: [0, 100],
+    outputRange: ['0%', '100%'],
+  });
+
+  return { width };
 };
+
+const getPercentageString = (percentage: number) =>
+  ' ' + Math.round(percentage) + '%';
 
 const styles = StyleSheet.create({
   percentageBar: {
     backgroundColor: colors.secondary,
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    right: 0,
-    padding: 0,
-    margin: 0,
-    flex: 1,
   },
   container: {
     borderColor: colors.secondary,
@@ -80,20 +90,28 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    overflow: 'hidden',
+    justifyContent: 'space-between',
     paddingVertical: styleValues.spacings.medium,
     marginTop: styleValues.spacings.small,
     borderRadius: styleValues.borderRadius,
-    overflow: 'hidden',
   },
   icon: {
+    marginLeft: styleValues.spacings.small,
     tintColor: colors.black,
-    position: 'absolute',
-    right: styleValues.spacings.medium,
     ...styleValues.iconSizes.large,
   },
   title: {
-    flexGrow: 1,
     flexWrap: 'wrap',
     paddingHorizontal: 20,
+    flexShrink: 1,
+  },
+  percentage: {
+    fontWeight: 'bold',
+  },
+  percentageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: styleValues.spacings.medium,
   },
 });
