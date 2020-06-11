@@ -6,9 +6,15 @@ The project uses:
 
 - [React Native](https://facebook.github.io/react-native/docs/getting-started) for iOS & Android app development
 - [TypeScript](https://www.typescriptlang.org/docs/home.html) for type-safety
-- [Redux](https://redux.js.org/api/api-reference) for storing state
+- [Redux](https://redux.js.org/api/api-reference) for state management
 - [Sagas](https://redux-saga.js.org/) for managing side effects
 - [React Native Testing Library](https://callstack.github.io/react-native-testing-library/) for testing the components
+
+## Supported features
+
+| Pagination                         |           Voting           |             Creating questions |
+| ---------------------------------- | :------------------------: | -----------------------------: |
+| ![pagination](demo/pagination.gif) | ![voting](demo/voting.gif) | ![creating](demo/creating.gif) |
 
 ## Running
 
@@ -16,6 +22,8 @@ Install dependencies:
 
 ```
 yarn
+
+cd ios && pod install
 ```
 
 Start packager:
