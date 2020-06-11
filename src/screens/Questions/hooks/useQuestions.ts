@@ -8,9 +8,9 @@ import {
   getQuestionIds,
   getQuestionsStatus,
 } from '../../../store/selectors';
-import { questionDetailsRouteName } from '../QuestionDetails';
-import { questionCreationRouteName } from '../QuestionCreation';
 import { questionsActions } from '../../../store/slices/questionsSlice';
+import { questionDetailsRouteName } from '../../QuestionDetails/QuestionDetails';
+import { questionCreationRouteName } from '../../QuestionCreation/QuestionCreation';
 
 export const useQuestions = () => {
   const opacity = useRef(new Animated.Value(1)).current;

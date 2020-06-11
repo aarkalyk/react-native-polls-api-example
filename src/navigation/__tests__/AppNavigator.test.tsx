@@ -12,7 +12,7 @@ import {
   mockChoiceObject,
   mockChoiceId,
 } from '../../test/mocks';
-import { CREATE_NEW_BUTTON_TEST_ID } from '../../screens/questions/Questions';
+import { CREATE_NEW_BUTTON_TEST_ID } from '../../screens/Questions/Questions';
 
 const mockState: Partial<RootState> = {
   questions: {

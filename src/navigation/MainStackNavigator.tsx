@@ -7,12 +7,12 @@ import {
 import {
   QuestionDetails,
   questionDetailsRouteName,
-} from '../screens/questions/QuestionDetails';
-import { Questions, questionsRouteName } from '../screens/questions/Questions';
+} from '../screens/QuestionDetails/QuestionDetails';
+import { Questions, questionsRouteName } from '../screens/Questions/Questions';
 import {
   QuestionCreation,
   questionCreationRouteName,
-} from '../screens/questions/QuestionCreation';
+} from '../screens/QuestionCreation/QuestionCreation';
 
 const Stack = createStackNavigator();
 

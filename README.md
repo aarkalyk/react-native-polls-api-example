@@ -34,7 +34,7 @@ yarn ios
 
 If you prefer Xcode rather than command line:
 
-- open `./ios/heycarchallenge.xcworkspace` in Xcode
+- open `./ios/PollsApp.xcworkspace` in Xcode
 - select a simulator or a device
 - hit the Run button
 

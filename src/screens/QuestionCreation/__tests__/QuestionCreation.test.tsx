@@ -18,7 +18,7 @@ import {
   QUESTION_SUBMIT_BUTTON_TEST_ID,
   ADD_CHOICE_BUTTON_TEST_ID,
   QuestionCreation,
-} from '../../../screens/questions/QuestionCreation';
+} from '../QuestionCreation';
 
 jest.mock('@react-navigation/native', () => {
   const actualNav = jest.requireActual('@react-navigation/native');

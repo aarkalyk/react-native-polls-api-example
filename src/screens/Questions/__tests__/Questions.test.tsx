@@ -14,7 +14,6 @@ import {
   Questions,
   QUESTIONS_LIST_ID,
 } from '../../../screens/questions/Questions';
-import { ScrollView } from 'react-native';
 
 jest.mock('@react-navigation/native', () => {
   const actualNav = jest.requireActual('@react-navigation/native');
