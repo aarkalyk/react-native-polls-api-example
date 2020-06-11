@@ -11,7 +11,7 @@ import {
   Questions,
   QUESTIONS_LIST_ID,
   ACTIVITY_INDICATOR_TEST_ID,
-} from '../../../screens/questions/Questions';
+} from '../../../screens/Questions/Questions';
 import { RootState, createStore } from '../../../store';
 import { questionsActions } from '../../../store/slices/questionsSlice';
 
