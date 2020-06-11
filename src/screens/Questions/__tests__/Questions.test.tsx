@@ -2,18 +2,18 @@ import React from 'react';
 import { render, waitFor, fireEvent } from 'react-native-testing-library';
 import { Provider } from 'react-redux';
 
-import { RootState, createStore } from '../../../store';
 import {
   mockQuestionObject,
   mockReduxStoreState,
   mockNextUrl,
 } from '../../../test/mocks';
-import { questionsActions } from '../../../store/slices/questionsSlice';
 import {
-  ACTIVITY_INDICATOR_TEST_ID,
   Questions,
   QUESTIONS_LIST_ID,
+  ACTIVITY_INDICATOR_TEST_ID,
 } from '../../../screens/questions/Questions';
+import { RootState, createStore } from '../../../store';
+import { questionsActions } from '../../../store/slices/questionsSlice';
 
 jest.mock('@react-navigation/native', () => {
   const actualNav = jest.requireActual('@react-navigation/native');
@@ -116,7 +116,7 @@ describe('Questions', () => {
           scrollEventData,
         );
 
-        // called once on render and once scroll end reached
+        // called once on render and once on scroll end reached
         expect(dispatch.mock.calls).toEqual([
           [questionsActions.getQuestionsRequested()],
           [questionsActions.getQuestionsRequested()],

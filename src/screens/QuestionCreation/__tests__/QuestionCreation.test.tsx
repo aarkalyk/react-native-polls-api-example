@@ -3,22 +3,22 @@ import { render, fireEvent, waitFor } from 'react-native-testing-library';
 import { act } from 'react-test-renderer';
 import { Provider } from 'react-redux';
 
-import { RootState, createStore } from '../../../store';
 import {
   mockQuestionId,
-  mockQuestionObject,
   mockChoiceObject,
   mockQuestionBody,
+  mockQuestionObject,
   mockReduxStoreState,
 } from '../../../test/mocks';
-import { questionsActions } from '../../../store/slices/questionsSlice';
 import {
-  QUESTION_TITLE_TEXT_INPUT_TEST_ID,
+  QuestionCreation,
+  ADD_CHOICE_BUTTON_TEST_ID,
   CHOICE_TEXT_INPUT_TEST_ID,
   QUESTION_SUBMIT_BUTTON_TEST_ID,
-  ADD_CHOICE_BUTTON_TEST_ID,
-  QuestionCreation,
+  QUESTION_TITLE_TEXT_INPUT_TEST_ID,
 } from '../QuestionCreation';
+import { RootState, createStore } from '../../../store';
+import { questionsActions } from '../../../store/slices/questionsSlice';
 
 jest.mock('@react-navigation/native', () => {
   const actualNav = jest.requireActual('@react-navigation/native');
@@ -61,7 +61,6 @@ describe('QuestionDetails', () => {
     const questionTitleTextInput = await wrapper.getByTestId(
       QUESTION_TITLE_TEXT_INPUT_TEST_ID,
     );
-    await waitFor(() => questionTitleTextInput);
     act(() =>
       fireEvent.changeText(questionTitleTextInput, mockQuestionObject.question),
     );
@@ -85,7 +84,6 @@ describe('QuestionDetails', () => {
       QUESTION_SUBMIT_BUTTON_TEST_ID,
     );
     act(() => fireEvent(submitButton, 'press'));
-    await waitFor(() => submitButton);
 
     expect(dispatch).toHaveBeenCalledWith(
       questionsActions.postQuestionRequested({
@@ -106,22 +104,21 @@ describe('QuestionDetails', () => {
       QUESTION_SUBMIT_BUTTON_TEST_ID,
     );
     act(() => fireEvent(submitButton, 'press'));
-    await waitFor(() => submitButton);
 
     // questionsActions.postQuestionRequested not dispatched since we haven't provided any 'choices'
     expect(dispatch).not.toHaveBeenCalled();
   });
 
   it('should add new text input for choice input when add more button pressed', async () => {
-    const { wrapper, dispatch } = setup();
+    const { wrapper } = setup();
 
     expect(wrapper.queryByTestId(CHOICE_TEXT_INPUT_TEST_ID + '3')).toBeNull();
 
     // Press add more
     const addMoreButton = await wrapper.getByTestId(ADD_CHOICE_BUTTON_TEST_ID);
-    await waitFor(() => addMoreButton);
     act(() => fireEvent(addMoreButton, 'press'));
 
+    // check if third choice has been created
     expect(
       wrapper.queryByTestId(CHOICE_TEXT_INPUT_TEST_ID + '3'),
     ).not.toBeNull();

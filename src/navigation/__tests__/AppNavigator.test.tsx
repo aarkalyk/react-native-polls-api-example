@@ -3,36 +3,18 @@ import { render, fireEvent, waitFor } from 'react-native-testing-library';
 import { act } from 'react-test-renderer';
 import { Provider } from 'react-redux';
 
+import {
+  mockChoiceObject,
+  mockQuestionObject,
+  mockReduxStoreState,
+} from '../../test/mocks';
 import { AppNavigator } from '../AppNavigator';
 import { RootState, createStore } from '../../store';
 import { LOADING_SCREEN_TEST_ID } from '../../components';
-import {
-  mockQuestionId,
-  mockQuestionObject,
-  mockChoiceObject,
-  mockChoiceId,
-} from '../../test/mocks';
 import { CREATE_NEW_BUTTON_TEST_ID } from '../../screens/Questions/Questions';
 
-const mockState: Partial<RootState> = {
-  questions: {
-    status: 'success',
-    byId: { [mockQuestionId]: mockQuestionObject },
-    ids: [mockQuestionId],
-    creationStatus: 'idle',
-  },
-  api: {
-    status: 'success',
-    url: '/questions',
-  },
-  choices: {
-    byId: { [mockChoiceId]: mockChoiceObject },
-    votedChoiceByQuestionId: {},
-  },
-};
-
 const setup = (state?: Partial<RootState>) => {
-  const store = createStore({ ...mockState, ...state });
+  const store = createStore({ ...mockReduxStoreState, ...state });
   const dispatch = jest.fn();
   store.dispatch = dispatch;
 

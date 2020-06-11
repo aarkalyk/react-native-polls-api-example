@@ -9,9 +9,9 @@ import {
 import { useSelector } from 'react-redux';
 
 import { images } from '../../../assets';
-import { Card, BodyRegular } from '../../../components';
 import { RootState } from '../../../store';
 import { styleValues, colors } from '../../../styles';
+import { Card, BodyRegular } from '../../../components';
 import { getHasBeenVoted, getQuestionById } from '../../../store/selectors';
 
 interface Props extends ViewProps {
@@ -48,15 +48,15 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   title: {
+    flexShrink: 1,
     flexWrap: 'wrap',
-    paddingRight: styleValues.spacings.medium,
+    paddingRight: styleValues.spacings.small,
   },
   icon: {
     tintColor: colors.black,
-    position: 'absolute',
-    right: 0,
     ...styleValues.iconSizes.large,
   },
 });

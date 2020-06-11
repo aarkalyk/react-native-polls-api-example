@@ -2,6 +2,7 @@ import { useReducer, useRef, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
+import produce from 'immer';
 
 import { QuestionBody } from '../../../types';
 import { getCreationStatus } from '../../../store/selectors';
@@ -47,48 +48,30 @@ export const useQuestionCreation = () => {
   };
 };
 
-export const reducer = (state: State, action: Actions): State => {
-  switch (action.type) {
-    case 'QUESTIONS_TITLE_CHANGED':
-      return {
-        ...state,
-        questionTitle: action.value,
-      };
-    case 'CHOICE_VALUE_CHANGED':
-      return {
-        ...state,
-        choicesValues: {
-          ...state.choicesValues,
-          byId: {
-            ...state.choicesValues.byId,
-            [action.id]: {
-              ...state.choicesValues.byId[action.id],
-              value: action.value,
-            },
-          },
-        },
-      };
-    case 'NEW_CHOICE_ADDED': {
-      return {
-        ...state,
-        choicesValues: {
-          byId: {
-            ...state.choicesValues.byId,
-            [state.nextChoiceId]: {
-              id: state.nextChoiceId,
-              placeHolder: 'Choice ' + state.nextChoiceId,
-              value: '',
-            },
-          },
-          ids: [...state.choicesValues.ids, state.nextChoiceId],
-        },
-        nextChoiceId: state.nextChoiceId + 1,
-      };
+export const reducer = (state: State, action: Actions) =>
+  produce(state, (draft) => {
+    switch (action.type) {
+      case 'QUESTIONS_TITLE_CHANGED':
+        draft.questionTitle = action.value;
+        break;
+      case 'CHOICE_VALUE_CHANGED':
+        draft.choicesValues.byId[action.id].value = action.value;
+        break;
+      case 'NEW_CHOICE_ADDED': {
+        const nextId = draft.nextChoiceId;
+        draft.choicesValues.byId[nextId] = {
+          id: nextId,
+          placeHolder: 'Choice ' + nextId,
+          value: '',
+        };
+        draft.choicesValues.ids.push(nextId);
+        draft.nextChoiceId = nextId + 1;
+        break;
+      }
     }
-    default:
-      return state;
-  }
-};
+
+    return draft;
+  });
 
 const isQuestionBodyValid = (questionBody: QuestionBody) =>
   questionBody.question.length > 0 && questionBody.choices.length > 1;

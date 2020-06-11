@@ -29,13 +29,13 @@ export const useQuestionDetails = () => {
     getVotedChoiceId(state, question.id),
   );
 
-  const sumOfVotes = useMemo(() => {
-    const sum = question.choice_ids.reduce((acc, currentId) => {
-      return acc + choicesById[currentId].votes;
-    }, 0);
-
-    return sum;
-  }, [hasBeenVoted]);
+  const sumOfVotes = useMemo(
+    () =>
+      question.choice_ids.reduce((sum, currentId) => {
+        return sum + choicesById[currentId].votes;
+      }, 0),
+    [hasBeenVoted],
+  );
 
   return {
     sumOfVotes,

@@ -8,11 +8,11 @@ import {
   QuestionDetails,
   questionDetailsRouteName,
 } from '../screens/QuestionDetails/QuestionDetails';
-import { Questions, questionsRouteName } from '../screens/Questions/Questions';
 import {
   QuestionCreation,
   questionCreationRouteName,
 } from '../screens/QuestionCreation/QuestionCreation';
+import { Questions, questionsRouteName } from '../screens/Questions/Questions';
 
 const Stack = createStackNavigator();
 

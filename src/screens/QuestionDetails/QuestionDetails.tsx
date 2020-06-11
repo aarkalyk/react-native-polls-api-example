@@ -1,12 +1,17 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 
+import {
+  Card,
+  BodyRegular,
+  DelayedRender,
+  TouchableIcon,
+} from '../../components';
 import { NavBar } from '../../navigation/NavBar';
 import { styleValues, colors } from '../../styles';
-import { Card, TouchableIcon, DelayedRender } from '../../components';
 import { choicesActions } from '../../store/slices/choicesSlice';
 
 import { ChoiceListItem } from './components/ChoiceListItem';
@@ -57,7 +62,9 @@ export const QuestionDetails = () => {
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.questionText}>{question.question}</Text>
+        <BodyRegular style={styles.questionText}>
+          {question.question}
+        </BodyRegular>
         <DelayedRender style={styles.buttonsContainer} appearFrom="bottom">
           {question.choice_ids.map((id) => {
             const choice = choicesById[id];
@@ -111,7 +118,6 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   questionText: {
-    fontSize: 20,
     fontWeight: '400',
     textAlign: 'center',
   },

@@ -27,9 +27,9 @@ export const ADD_CHOICE_BUTTON_TEST_ID = 'ADD_CHOICE_BUTTON_TEST_ID_';
 
 export const QuestionCreation = () => {
   const {
+    status,
     localState,
     localDispatch,
-    status,
     onPressBack,
     onPressSubmit,
   } = useQuestionCreation();
@@ -48,7 +48,7 @@ export const QuestionCreation = () => {
         testID={QUESTION_SUBMIT_BUTTON_TEST_ID}
         iconName="check"
         iconColor="primary"
-        iconSize={{ width: 15, height: 15 }}
+        iconSize={styleValues.iconSizes.regular}
         onPress={onPressSubmit}
       />
     );
@@ -101,13 +101,13 @@ export const QuestionCreation = () => {
 
 const styles = StyleSheet.create({
   card: {
+    flex: 1,
     marginHorizontal: styleValues.spacings.medium,
     marginVertical: styleValues.spacings.extraLarge,
-    flex: 1,
   },
   navbar: {
-    height: styleValues.spacings.large,
     paddingHorizontal: 0,
+    height: styleValues.spacings.large,
     marginBottom: styleValues.spacings.medium,
   },
   navbarTitle: {
@@ -118,11 +118,11 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flexWrap: 'wrap',
-    fontSize: bodyStyles.regular.fontSize,
-    borderBottomColor: colors.secondary,
     borderBottomWidth: 1,
-    paddingVertical: styleValues.spacings.small,
     color: colors.black,
+    borderBottomColor: colors.secondary,
+    fontSize: bodyStyles.regular.fontSize,
+    paddingVertical: styleValues.spacings.small,
   },
   choiceTextInput: {
     fontSize: bodyStyles.small.fontSize,

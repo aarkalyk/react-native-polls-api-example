@@ -1,52 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Animated, ViewProps, View } from 'react-native';
+import React, { useEffect, useState, FC } from 'react';
+import { Animated, ViewProps } from 'react-native';
 
-interface DelayedRenderProps extends ViewProps {
-  children?: React.ReactNode;
-  initialDelay?: number;
-  delayInterval?: number;
-  appearFrom?: AppearFrom;
-}
-
-type AppearFrom = 'left' | 'right' | 'top' | 'bottom';
-const DEFAULT_DELAY = 200;
-
-export const DelayedRender: React.StatelessComponent<DelayedRenderProps> = ({
-  style,
-  children,
-  delayInterval,
-  initialDelay,
-  appearFrom = 'left',
-}) => {
-  let delay = initialDelay ?? DEFAULT_DELAY;
-
-  return (
-    <View style={style}>
-      {React.Children.map(children, (child, index) => {
-        if (index !== 0) {
-          delay += delayInterval ?? DEFAULT_DELAY;
-        }
-
-        return (
-          <DelayedRenderComponent appearFrom={appearFrom} delay={delay}>
-            {child}
-          </DelayedRenderComponent>
-        );
-      })}
-    </View>
-  );
-};
-
-interface DelayedRenderComponentProps extends ViewProps {
+interface Props extends ViewProps {
   delay: number;
   appearFrom: AppearFrom;
 }
 
-const ANIMATION_DURATION = 300;
-
-export const DelayedRenderComponent: React.StatelessComponent<DelayedRenderComponentProps> = (
-  props,
-) => {
+export const DelayedRenderItem: FC<Props> = (props) => {
   const { children, delay, appearFrom, ...viewProps } = props;
   const [animatedValue] = useState<Animated.Value>(
     new Animated.Value(initialPositionByAppearFrom[appearFrom]),
@@ -82,6 +42,9 @@ export const DelayedRenderComponent: React.StatelessComponent<DelayedRenderCompo
   );
 };
 
+export type AppearFrom = 'left' | 'right' | 'top' | 'bottom';
+
+const ANIMATION_DURATION = 300;
 const INITIAL_POSITION_POSITIVE = 20;
 const INITIAL_POSITION_NEGATIVE = -INITIAL_POSITION_POSITIVE;
 

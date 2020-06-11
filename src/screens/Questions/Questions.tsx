@@ -46,7 +46,7 @@ export const Questions = () => {
   return (
     <Screen>
       <Animated.View style={[styles.animatedContainer, { opacity }]}>
-        <NavBar title="Questions" />
+        <NavBar title="Questions" titleStyle={styles.navbarTitleStyle} />
         <FlatList
           contentContainerStyle={styles.flatListContainer}
           style={styles.flatList}
@@ -90,6 +90,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: styleValues.spacings.medium,
     paddingBottom: styleValues.spacings.extraLarge,
+  },
+  navbarTitleStyle: {
+    color: colors.white,
   },
   primaryButtonContainer: {
     position: 'absolute',

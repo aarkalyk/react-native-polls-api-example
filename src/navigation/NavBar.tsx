@@ -27,7 +27,7 @@ export const NavBar: FC<Props> = ({
   return (
     <View style={[styles.container, style]}>
       {renderLeftItem !== undefined ? renderLeftItem() : <View />}
-      <BodyRegular style={[styles.title, titleStyle]}>{title}</BodyRegular>
+      <BodyRegular style={titleStyle}>{title}</BodyRegular>
       {renderRightItem !== undefined ? renderRightItem() : <View />}
     </View>
   );
@@ -41,9 +41,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.transparent,
     paddingHorizontal: styleValues.spacings.large,
-  },
-  title: {
-    color: 'white',
-    fontSize: 16,
   },
 });
