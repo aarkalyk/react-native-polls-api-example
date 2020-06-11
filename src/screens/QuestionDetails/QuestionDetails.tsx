@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { NavBar } from '../../navigation/NavBar';
 import { styleValues, colors } from '../../styles';
-import { Card, TouchableIcon } from '../../components';
+import { Card, TouchableIcon, DelayedRender } from '../../components';
 import { choicesActions } from '../../store/slices/choicesSlice';
 
 import { ChoiceListItem } from './components/ChoiceListItem';
@@ -58,7 +58,7 @@ export const QuestionDetails = () => {
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.questionText}>{question.question}</Text>
-        <View style={styles.buttonsContainer}>
+        <DelayedRender style={styles.buttonsContainer} appearFrom="bottom">
           {question.choice_ids.map((id) => {
             const choice = choicesById[id];
             const isChosen = hasBeenVoted && votedChoice === id;
@@ -81,7 +81,7 @@ export const QuestionDetails = () => {
               />
             );
           })}
-        </View>
+        </DelayedRender>
       </ScrollView>
     </Card>
   );

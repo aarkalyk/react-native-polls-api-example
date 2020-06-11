@@ -9,8 +9,8 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { images } from '../../../assets';
-import { BodySmall } from '../../../components';
 import { colors, styleValues } from '../../../styles';
+import { BodySmall, DelayedRender } from '../../../components';
 
 interface Props extends TouchableOpacityProps {
   title: string;
@@ -31,23 +31,24 @@ export const ChoiceListItem: FC<Props> = ({
     percentage,
     hasBeenVoted,
   });
+  const borderWidth = hasBeenVoted ? 0 : 1;
 
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled}>
-      <View style={styles.container}>
+      <View style={[styles.container, { borderWidth }]}>
         <Animated.View
           style={[StyleSheet.absoluteFill, styles.percentageBar, { width }]}
         />
         <BodySmall style={styles.title}>{title}</BodySmall>
         {hasBeenVoted && (
-          <View style={styles.percentageContainer}>
-            <BodySmall style={styles.percentage}>
-              {getPercentageString(percentage)}
-            </BodySmall>
+          <DelayedRender style={styles.percentageContainer} appearFrom="left">
             {isChosen && (
               <Image source={images.checkMark()} style={styles.icon} />
             )}
-          </View>
+            <BodySmall style={styles.percentage}>
+              {getPercentageString(percentage)}
+            </BodySmall>
+          </DelayedRender>
         )}
       </View>
     </TouchableOpacity>
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: styleValues.borderRadius,
   },
   icon: {
-    marginLeft: styleValues.spacings.small,
+    marginRight: styleValues.spacings.small,
     tintColor: colors.black,
     ...styleValues.iconSizes.large,
   },
